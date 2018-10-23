@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from . import views
-from .views import home, QuizListView, CategoriesListView,\
+from .views import home, QuizListView, QuizListViewPte, QuizListViewOther, CategoriesListView,\
     ViewQuizListByCategory, QuizUserProgressView, QuizMarkingList,\
     QuizMarkingDetail, QuizDetailView, QuizTake
 
@@ -10,6 +10,14 @@ urlpatterns = (url(r'^$', views.home, name='home'),
                        url(regex=r'^list/$',
                            view=QuizListView.as_view(),
                            name='quiz_index'),
+
+                       url(regex=r'^list_pte/$',
+                           view=QuizListViewPte.as_view(),
+                           name='quiz_index_pte'),
+
+                       url(regex=r'^list_other/$',
+                           view=QuizListViewOther.as_view(),
+                           name='quiz_index_other'),
 
                        url(regex=r'^category/$',
                            view=CategoriesListView.as_view(),

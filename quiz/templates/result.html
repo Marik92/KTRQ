@@ -4,17 +4,17 @@
 {% load quiz_tags %}
 
 {% block title %} {{ quiz.title}} {% endblock %}
-{% block description %} {% trans "Exam Results for" %} {{ quiz.title }} {% endblock %}
+{% block description %} {% trans "Результаты теста:" %} {{ quiz.title }} {% endblock %}
 
 {% block content %}
 
   {% if previous.answers %}
 
-  <p class="muted"><small>{% trans "The previous question" %}:</small></p>
+  <p class="muted"><small>{% trans "Предыдущий вопрос" %}:</small></p>
   <p>{{ previous.previous_question }}</p>
-  <p>Your answer was
+  <p>Ваш ответ был
 	<strong>
-	  {{ previous.previous_outcome|yesno:"correct,incorrect" }}
+	  {{ previous.previous_outcome|yesno:"Правильный,Неправильный" }}
 	</strong>
   </p>
   {% include 'correct_answer.html' %}
@@ -63,7 +63,7 @@
   {% if possible %}
 
   <p class="lead">
-	{% trans "Your session score is" %} {{ session }} {% trans "out of a possible" %} {{ possible }}
+	{% trans "Ваш результат:" %} {{ session }} {% trans "из максимально возможных" %} {{ possible }}
   </p>
 
   <hr>
@@ -81,10 +81,10 @@
 	  {% correct_answer_for_all question %}
 
       {% if question.user_answer %}
-      <p>{% trans "Your answer" %}: {{ question|answer_choice_to_string:question.user_answer }}</p>
+      <p>{% trans "Ваш ответ" %}: {{ question|answer_choice_to_string:question.user_answer }}</p>
       {% endif %}
 
-	  <p><strong>{% trans "Explanation" %}:</strong></p>
+	  <p><strong>{% trans "Объяснение" %}:</strong></p>
 	  <div class="well " style="background-color: #fcf8e3;">
 		<p>{{ question.explanation|safe }}</p>
 	  </div>

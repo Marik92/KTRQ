@@ -5,12 +5,13 @@
 {% endblock %}
 
 {% block content %}
-<h2>{{ quiz.title }}</h2>
+<h2>Название теста: {{ quiz.title }}</h2>
 <h3>{% trans "Категория" %}: {{ quiz.category }}</h3>
 {% if quiz.single_attempt %}
   <h4>{% trans "У вас только одна попытка на сдачу этого теста!!!" %}.</h4>
 {% endif %}
-<p>{{ quiz.description }}</p>
+<p>Описание теста: {{ quiz.description }}</p>
+<p>Правила сдачи экзамена: </p>
 <p>
   <a href="{% url 'quiz_question' quiz_name=quiz.url %}">
 	{% trans "Начать тест" %}

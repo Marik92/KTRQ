@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block title %}{% trans "Тесты ТБ" %}{% endblock %}
+{% block title %}{% trans "Тесты ПТЭ" %}{% endblock %}
 
 {% block content %}
 <h2>{% trans "Список тестов" %}</h2>
@@ -20,7 +20,7 @@
 		  		<tbody>
 
 				{% for quiz in quiz_list %}
-					{% ifequal quiz.category.category "Техника Безопасности" %}
+					{% ifequal quiz.category.category "Правила Технической Эксплуатации" %}
   						<tr>
 			  				<td>{{ quiz.title }}</td>
 			  				<td>{{ quiz.category }}</td>
@@ -35,7 +35,6 @@
 					{% endifequal %}
         		{% endfor %}
 		  		</tbody>
-
 			</table>
 
 		{% else %}

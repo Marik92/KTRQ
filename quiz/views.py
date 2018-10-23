@@ -33,12 +33,27 @@ class SittingFilterTitleMixin(object):
 
 class QuizListView(ListView):
     model = Quiz
+    template_name = 'quiz/quiz_list.html'
 
     def get_queryset(self):
         queryset = super(QuizListView, self).get_queryset()
-        print (queryset)
         return queryset.filter(draft=False)
 
+class QuizListViewPte(ListView):
+    model = Quiz
+    template_name = 'quiz/quiz_list_pte.html'
+
+    def get_queryset(self):
+        queryset = super(QuizListViewPte, self).get_queryset()
+        return queryset.filter(draft=False)
+
+class QuizListViewOther(ListView):
+    model = Quiz
+    template_name = 'quiz/quiz_list_other.html'
+
+    def get_queryset(self):
+        queryset = super(QuizListViewOther, self).get_queryset()
+        return queryset.filter(draft=False)
 
 class QuizDetailView(DetailView):
     model = Quiz
