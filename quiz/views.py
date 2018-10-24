@@ -221,8 +221,9 @@ class QuizTake(FormView):
 
     def form_valid_user(self, form):
         progress, c = Progress.objects.get_or_create(user=self.request.user)
-        guess = form.cleaned_data['answers']
-        is_correct = self.question.check_if_correct(guess)
+        guess_list = form.cleaned_data['answers']
+
+        is_correct = self.question.check_if_correct(guess_list)
 
         if is_correct is True:
             self.sitting.add_to_score(1)
@@ -232,7 +233,7 @@ class QuizTake(FormView):
             progress.update_score(self.question, 0, 1)
 
         if self.quiz.answers_at_end is not True:
-            self.previous = {'previous_answer': guess,
+            self.previous = {'previous_answer': guess_list,
                              'previous_outcome': is_correct,
                              'previous_question': self.question,
                              'answers': self.question.get_answers(),
@@ -241,7 +242,7 @@ class QuizTake(FormView):
         else:
             self.previous = {}
 
-        self.sitting.add_user_answer(self.question, guess)
+        self.sitting.add_user_answer(self.question, guess_list)
         self.sitting.remove_first_question()
 
     def final_result_user(self):
@@ -316,8 +317,9 @@ class QuizTake(FormView):
         return (answered, total)
 
     def form_valid_anon(self, form):
-        guess = form.cleaned_data['answers']
-        is_correct = self.question.check_if_correct(guess)
+        guess_list = form.cleaned_data['answers']
+        print (guess_list)
+        is_correct = self.question.check_if_correct(guess_list)
 
         if is_correct:
             self.request.session[self.quiz.anon_score_id()] += 1

@@ -569,10 +569,37 @@ class Question (models.Model):
 
     question = models.CharField(max_length=200, unique=True, verbose_name='Вопрос')
 
-    def check_if_correct(self, guess):
-        answer = Answer.objects.get(id=guess)
+    def check_if_correct(self, guess_list):
+        "Функция проверят ответы на правильность. В качестве аргумента принимает guess_list со списком ID ответов, которые дал пользователь"
+        
+        #Вытаскиваем ID-шники всех ответов в данном вопросе и заносим их в список
+        all_answer = Answer.objects.filter(question__question=self.question)
+        all_answers_ids = []
+        for answer in all_answer:
+            all_answers_ids.append(answer.id)
+        print (all_answers_ids)
 
-        if str(answer.correct_or_not) == "Да":
+        #Вытаскиваем ID-шники только правильных ответов и заносим в список
+        correct_answers_ids = []
+        for ids in all_answers_ids:
+            value = Answer.objects.get(id=ids)
+            if str(value.correct_or_not) == "Да":
+                correct_answers_ids.append(ids)
+            else:
+                pass
+        print (correct_answers_ids)
+
+        #Вытаскиваем ID-шники ответов пользователя и если они 
+        user_answers_ids = []
+        for guess in guess_list:
+            user_answers_ids.append(int(guess))
+        print (user_answers_ids)
+        
+        #Сравниваем список с правильными ответам и список с ответами пользователя с помощью кортежей
+        #если списки одинаковые то сравнивание выдаст такое же кол-во элементов что и в списке с правильными ответами
+        #поэтому просто сравниваем длинну списков
+        result = list(set(user_answers_ids) & set(correct_answers_ids))
+        if len(user_answers_ids) == len(result):
             return True
         else:
             return False
