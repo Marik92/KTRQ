@@ -599,7 +599,7 @@ class Question (models.Model):
         #если списки одинаковые то сравнивание выдаст такое же кол-во элементов что и в списке с правильными ответами
         #поэтому просто сравниваем длинну списков
         result = list(set(user_answers_ids) & set(correct_answers_ids))
-        if len(user_answers_ids) == len(result):
+        if len(correct_answers_ids) == len(result):
             return True
         else:
             return False
