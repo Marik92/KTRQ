@@ -399,3 +399,14 @@ def anon_session_score(session, to_add=0, possible=0):
         session["session_score_possible"] += possible
 
     return session["session_score"], session["session_score_possible"]
+
+
+class GraphView(TemplateView):
+    template_name = 'graphs.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GraphView, self).get_context_data(**kwargs)
+        progress, c = Progress.objects.get_or_create(user=self.request.user)
+        context['cat_scores'] = progress.list_all_cat_scores
+        context['exams'] = progress.show_exams()
+        return context

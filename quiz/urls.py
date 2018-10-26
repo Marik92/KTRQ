@@ -2,7 +2,7 @@ from django.conf.urls import url
 from . import views
 from .views import home, QuizListView, QuizListViewPte, QuizListViewOther, CategoriesListView,\
     ViewQuizListByCategory, QuizUserProgressView, QuizMarkingList,\
-    QuizMarkingDetail, QuizDetailView, QuizTake
+    QuizMarkingDetail, QuizDetailView, QuizTake, GraphView
 
 
 urlpatterns = (url(r'^$', views.home, name='home'),
@@ -18,6 +18,10 @@ urlpatterns = (url(r'^$', views.home, name='home'),
                        url(regex=r'^list_other/$',
                            view=QuizListViewOther.as_view(),
                            name='quiz_index_other'),
+
+                       url(regex=r'^graphs/$',
+                           view=GraphView.as_view(),
+                           name='quiz_graph'),
 
                        url(regex=r'^category/$',
                            view=CategoriesListView.as_view(),

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% load quiz_tags %}
+
+{% block title %} {{ quiz.title }} {% endblock %}
+{% block description %} {{ quiz.title }} - {{ quiz.description }} {% endblock %}
+
+{% block content %}
+
+
+{% if user.is_authenticated %}
+  <p>{% trans "Вы уже сдавали данный тест. Дается только одна попытка на сдачу!" %}.</p>
+
+
+{% else %}
+  <p>{% trans "Данный тест доступен только зарегестрированным пользователям!" %}.</p>
+{% endif %}
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<div id="container" style="margin-top: 20%"></div>
+<script>
+    $(function () {
+        var chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'container',
+                backgroundColor: {
+                    linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+                    stops: [
+                        [0, 'rgb(255, 255, 255)'],
+                        [1, 'rgb(200, 200, 255)']
+                    ]
+                },
+                type: 'line'
+            },
+            title: {
+                text: 'График вашей результативности по сдаче теста'
+            },
+            xAxis: {
+                categories: [{% for exam in exams %}"{{ exam.end|date:"Y-m-d" }}"{% if not forloop.last %}, {% endif %}{% endfor %}]
+            },
+            yAxis: {
+                title: {
+                    text: 'Результат (%)'},
+                max: 100
+            },
+            legend: {
+                    layout: 'vertical',
+                    backgroundColor: '#FFFFFF',
+                    floating: true,
+                    align: 'left',
+                    x: 70,
+                    verticalAlign: 'top',
+                    y: 5
+                },
+            tooltip: {
+                formatter: function() {
+                    return '<b>'+ this.series.name +'</b><br/>'+
+                        this.x +': '+ this.y;
+                }
+            },
+            plotOptions: {
+            },
+            series: [{
+                name: 'Результат',
+                data: [{% for exam in exams %}{{ exam.get_percent_correct }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+                color: 'cornflowerblue'
+            }]
+        });
+    });
+</script>
+</div>
+
+{% endblock %}

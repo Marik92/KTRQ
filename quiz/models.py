@@ -569,6 +569,12 @@ class Question (models.Model):
 
     question = models.CharField(max_length=200, unique=True, verbose_name='Вопрос')
 
+    explanation = models.TextField(max_length=2000,
+                                   blank=True,
+                                   help_text=("Объяснение будет показано "
+                                               "после ответа на вопрос."),
+                                   verbose_name=('Объяснение'))
+
     def check_if_correct(self, guess_list):
         "Функция проверят ответы на правильность. В качестве аргумента принимает guess_list со списком ID ответов, которые дал пользователь"
         
@@ -596,7 +602,7 @@ class Question (models.Model):
         print (user_answers_ids)
         
         #Сравниваем список с правильными ответам и список с ответами пользователя с помощью кортежей
-        #если списки одинаковые то сравнивание выдаст такое же кол-во элементов что и в списке с правильными ответами
+        #если списки одинаковые то выдаст такое же кол-во элементов что и в списке с правильными ответами
         #поэтому просто сравниваем длинну списков
         result = list(set(user_answers_ids) & set(correct_answers_ids))
         if len(correct_answers_ids) == len(result):

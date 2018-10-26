@@ -17,9 +17,10 @@
 	<thead>
 	  <tr>
 		<th>{% trans "Категория" %}</th>
-		<th>{% trans "Правильно отвеченные" %}</th>
-		<th>{% trans "Неправльные" %}</th>
-		<th>%</th>
+		<th>{% trans "Правильные" %}</th>
+		<th>{% trans "Неправильные" %}</th>
+		<th>{% trans "В процентах (%)" %}</th>
+		<th>{% trans "График" %}</th>
 	  </tr>
 	</thead>
 
@@ -32,6 +33,7 @@
 		<td>{{ value.0 }}</td>
 		<td>{{ value.1 }}</td>
 		<td>{{ value.2 }}</td>
+		<td><a href="/quiz/graphs/">График</a></td>
 	  </tr>
 
 	  {% endfor %}
@@ -47,7 +49,7 @@
 
   <hr>
 
-  <h1>{% trans "Результаты предыдущего теста" %}</h1>
+  <h1>{% trans "Результаты последних тестов" %}</h1>
   <p class="lead">
 	{% trans "Ниже приведены результаты тестов, которые вы сдавали." %}
   </p>
@@ -57,9 +59,10 @@
 	<thead>
 	  <tr>
 		<th>{% trans "Название теста" %}</th>
+		<th>{% trans "Дата сдачи" %}</th>
 		<th>{% trans "Результат" %}</th>
 		<th>{% trans "Максимальный результат" %}</th>
-		<th>%</th>
+		<th>{% trans "В процентах (%)" %}</th>
 	  </tr>
 	</thead>
 
@@ -69,9 +72,10 @@
 
 	  <tr>
 		<td>{{ exam.quiz.title }}</td>
+		<td>{{ exam.end }}</td>
 		<td>{{ exam.current_score }}</td>
 		<td>{{ exam.get_max_score }}</td>
-		<td>{{ exam.get_percent_correct }}</td>
+		<td>{{ exam.get_percent_correct }}{% trans "%" %}</td>
 	  </tr>
 
 	  {% endfor %}

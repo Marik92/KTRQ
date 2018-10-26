@@ -67,7 +67,7 @@ class AnswerInline(admin.TabularInline):
 
 class QuestionAdmin(admin.ModelAdmin):
     fields = ['question', 'category', 'sub_category',
-              'figure', 'answer_order']
+              'figure', 'answer_order', 'explanation']
     inlines = [AnswerInline]
     search_fields = ['category',]
 
