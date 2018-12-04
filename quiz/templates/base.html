@@ -29,7 +29,13 @@
             <a class="p-2 text-dark" href="#">Поддержка</a>
             <a class="p-2 text-dark" href="#">Pricing</a>
         </nav>
-            <a class="btn btn-outline-primary" href="#">Войти</a>
+            {% if user.is_authenticated %}
+                Hi {{ user.username }}!
+                <a class="btn btn-outline-primary" href="/accounts/logout">Выйти</a>
+            {% else %}
+                <p>You are not logged in</p>
+                <a class="btn btn-outline-primary" href="/accounts/login">Войти</a>
+            {% endif %}
     </div>
 
 <!-- Before the quiz content -->

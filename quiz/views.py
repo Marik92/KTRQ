@@ -9,6 +9,7 @@ from django.views.generic import DetailView, ListView, TemplateView, FormView
 from .forms import QuestionForm
 from .models import Quiz, Category, Progress, Sitting, Question
 
+
 def home(request):
     """Функция рендерит html-страницу и передает ей объекты из модели"""
 
@@ -332,7 +333,7 @@ class QuizTake(FormView):
 
         self.previous = {}
         if self.quiz.answers_at_end is not True:
-            self.previous = {'previous_answer': guess,
+            self.previous = {'previous_answer': guess_list,
                              'previous_outcome': is_correct,
                              'previous_question': self.question,
                              'answers': self.question.get_answers(),
