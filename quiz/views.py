@@ -1,19 +1,37 @@
 import random
-
+from django.db import transaction
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect, HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, FormView
-
-from .forms import QuestionForm
-from .models import Quiz, Category, Progress, Sitting, Question
-
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic.edit import FormView
+from .forms import QuestionForm, SignUpForm, ProfileForm
+from .models import Quiz, Category, Progress, Sitting, Question, UserProfile
+from django.contrib.auth import login, authenticate
 
 def home(request):
     """Функция рендерит html-страницу и передает ей объекты из модели"""
 
     return render(request, 'home.html')
+
+def Register(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.refresh_from_db()  # load the profile instance created by the signal
+            user.profile.birth_date = form.cleaned_data.get('birth_date')
+            user.save()
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=user.username, password=raw_password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = SignUpForm()
+    return render(request, 'register.html', {'form': form})
+
 
 class QuizMarkerMixin(object):
     @method_decorator(login_required)

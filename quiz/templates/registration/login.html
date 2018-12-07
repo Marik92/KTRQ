@@ -3,5 +3,6 @@
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit">Login</button>
+  <button type="submit">Войти</button>
+  <a href="/register">Зарегистрироваться</a>
 </form>

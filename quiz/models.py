@@ -1,17 +1,108 @@
 import re
 import json
-
 from urllib import request
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.validators import MaxValueValidator
 from django.conf import settings
-from django.contrib import auth
 from django.contrib.auth.models import User
 from django.db import models
 from django.shortcuts import redirect
 from model_utils.managers import InheritanceManager
 from django.core.validators import RegexValidator, validate_comma_separated_integer_list
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+class Filial(models.Model):
+    name = models.CharField(
+        verbose_name=("Филиал"),
+        max_length=200,
+        unique = True,
+        null = True,
+        blank = True,
+    )
+
+    class Meta:
+        verbose_name = ("Филиал")
+        verbose_name_plural = ("Филиалы")
+
+    def __str__(self):
+        return self.name
+
+class Department(models.Model):
+    filial = models.ForeignKey(Filial, on_delete=models.CASCADE,
+        verbose_name=("Филиал"))
+    name = models.CharField(
+        verbose_name=("Департамент/Служба/Отдел"),
+        max_length=200,
+        null = True, 
+        blank = True,)
+
+    class Meta:
+        verbose_name = ("Департамент/Служба/Отдел")
+        verbose_name_plural = ("Департамент/Служба/Отдел")
+
+    def __str__(self):
+        return self.name
+
+class Position(models.Model):
+    name = models.CharField(
+        verbose_name=("Должность"),
+        max_length=200,
+        unique = True,
+        null = True,
+        blank = True,)
+
+    class Meta:
+        verbose_name = ("Должность")
+        verbose_name_plural = ("Должности")
+
+    def __str__(self):
+        return self.name
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User,
+        on_delete=models.CASCADE)
+
+    city = models.CharField(
+        verbose_name=("Город/Село"),
+        max_length=100,
+        unique=True,
+        null = True,
+        blank = True,
+    )
+
+    filial = models.ForeignKey(
+        Filial, 
+        on_delete=models.CASCADE,
+        verbose_name=("Филиал"),
+        null=True
+    )
+
+    department = models.ForeignKey(Department, on_delete=models.CASCADE,
+        verbose_name=("Департамент/Служба/Отдел"), null=True,
+    )
+
+    position = models.ForeignKey(Position, on_delete=models.CASCADE,
+        verbose_name=("Должность"),
+        null=True,
+    )
+
+    def __str__(self):
+        return "%s's profile" % self.user
+
+User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0]) 
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
+
 
 
 class CategoryManager(models.Manager):
