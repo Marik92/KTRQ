@@ -48,9 +48,11 @@ class Department(models.Model):
 
 class Position(models.Model):
     filial = models.ForeignKey(Filial, on_delete=models.CASCADE,
-        verbose_name=("Филиал"), default = 1, related_name='filial_article_set')
+        verbose_name=("Филиал"), 
+        related_name='filial_article_set')
     department = models.ForeignKey(Department, on_delete=models.CASCADE,
-        verbose_name=("Департамент/Служба/Отдел"), default = 1, related_name='department_article_set')
+        verbose_name=("Департамент/Служба/Отдел"), default = 1, 
+        related_name='department_article_set',)
     name = models.CharField(
         verbose_name=("Должность"),
         max_length=200,
@@ -66,8 +68,10 @@ class Position(models.Model):
         return self.name
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User,
+    user = models.OneToOneField(User, default = None,
+        null = True,
         on_delete=models.CASCADE)
+
 
     city = models.CharField(
         verbose_name=("Город/Село"),
@@ -102,6 +106,7 @@ User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
+    instance.profile.save()
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):

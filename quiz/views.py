@@ -19,10 +19,12 @@ def home(request):
 def Register(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
-        if form.is_valid():
+        profile_form = ProfileForm(request.POST)
+        if form.is_valid() and profile_form.is_valid():
             user = form.save()
+            user_profile = profile_form.save()
             user.refresh_from_db()  # load the profile instance created by the signal
-            user.profile.birth_date = form.cleaned_data.get('birth_date')
+            user.profile.city = form.cleaned_data.get('city')
             user.save()
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
@@ -30,7 +32,8 @@ def Register(request):
             return redirect('home')
     else:
         form = SignUpForm()
-    return render(request, 'register.html', {'form': form})
+        profile_form = ProfileForm()
+    return render(request, 'register.html', {'form': form, 'profile_form': profile_form})
 
 
 class QuizMarkerMixin(object):

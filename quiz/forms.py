@@ -22,4 +22,4 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ('city',)
+        fields = ('city', 'filial', 'department', 'position')

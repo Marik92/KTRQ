@@ -5,6 +5,7 @@
     <p></p>
     <form action="" method="post">{% csrf_token %}
         {{ form.as_p}}
+        {{profile_form.as_p}}
         <button type="submit">Зарегестрироваться</button>
     </form>
 </body>
