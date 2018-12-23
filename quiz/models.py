@@ -47,6 +47,8 @@ class Department(models.Model):
         return self.name
 
 class Position(models.Model):
+    department = models.ForeignKey(Filial, on_delete=models.CASCADE,
+        verbose_name=("Департамент/Служба/Отдел"))
     name = models.CharField(
         verbose_name=("Должность"),
         max_length=200,
