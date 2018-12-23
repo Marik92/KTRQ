@@ -71,6 +71,15 @@ class QuestionAdmin(admin.ModelAdmin):
     inlines = [AnswerInline]
     search_fields = ['category',]
 
+class PositionAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    
+class DepartmentAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+class FilialAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(SubCategory, SubCategoryAdmin)
@@ -78,3 +87,6 @@ admin.site.register(Progress, ProgressAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(correctValue)
 admin.site.register(Answer)
+admin.site.register(Position, PositionAdmin)
+admin.site.register(Department, DepartmentAdmin)
+admin.site.register(Filial, FilialAdmin)
