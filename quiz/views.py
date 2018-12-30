@@ -5,9 +5,9 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render, redirect, HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, FormView
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, User
 from django.views.generic.edit import FormView
-from .forms import QuestionForm, SignUpForm, ProfileForm
+from .forms import QuestionForm, SignUpForm, ProfileForm, UserForm
 from .models import Quiz, Category, Progress, Sitting, Question, UserProfile
 from django.contrib.auth import login, authenticate
 
@@ -19,12 +19,9 @@ def home(request):
 def Register(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
-        profile_form = ProfileForm(request.POST)
-        if form.is_valid() and profile_form.is_valid():
+        if form.is_valid():
             user = form.save()
-            user_profile = profile_form.save()
             user.refresh_from_db()  # load the profile instance created by the signal
-            user.profile.city = form.cleaned_data.get('city')
             user.save()
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
@@ -32,9 +29,26 @@ def Register(request):
             return redirect('home')
     else:
         form = SignUpForm()
-        profile_form = ProfileForm()
-    return render(request, 'register.html', {'form': form, 'profile_form': profile_form})
+    return render(request, 'register.html', {'form': form})
 
+def profile(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, ('Your profile was successfully updated!'))
+            return redirect('settings:profile')
+        else:
+            messages.error(request, ('Please correct the error below.'))
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+    return render(request, 'profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
 
 class QuizMarkerMixin(object):
     @method_decorator(login_required)

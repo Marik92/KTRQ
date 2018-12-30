@@ -1,11 +1,12 @@
 from django.conf.urls import url
 from . import views
-from .views import home, QuizListView, QuizListViewPte, QuizListViewOther, CategoriesListView,\
+from .views import home, profile, QuizListView, QuizListViewPte, QuizListViewOther, CategoriesListView,\
     ViewQuizListByCategory, QuizUserProgressView, QuizMarkingList,\
     QuizMarkingDetail, QuizDetailView, QuizTake, GraphView
 
 
 urlpatterns = (url(r'^$', views.home, name='home'),
+                       url(r'profile/$', views.profile, name='profile' ), 
 
                        url(regex=r'^list/$',
                            view=QuizListView.as_view(),
