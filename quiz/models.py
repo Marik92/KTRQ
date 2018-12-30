@@ -1,5 +1,5 @@
 import re
-import json
+import json, datetime
 from urllib import request
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError, ImproperlyConfigured
@@ -164,6 +164,13 @@ class SubCategory(models.Model):
 
 class Quiz(models.Model):
 
+    ATTEMPT_LIST = (
+        ('D', 'Одна попытка в день'),
+        ('M', 'Одна попытка в месяц'),
+        ('Y', 'Одна попытка в год'),
+        ('U', 'Неограниченные попытки'),
+    )
+
     title = models.CharField(
         verbose_name=("Название теста"),
         max_length=60, blank=False, help_text=("Введите название теста"))
@@ -207,6 +214,13 @@ class Quiz(models.Model):
                     " Незарегиситрированные пользователи не смогут сдать экзамен."),
         verbose_name=("Одна попытка?"))
 
+    attempt_choise = models.CharField(
+        blank=False,
+        max_length=50,
+        default='U',
+        choices=ATTEMPT_LIST
+    )
+
     pass_mark = models.SmallIntegerField(
         blank=True, default=0,
         verbose_name=("Порог прохождения теста"),
@@ -233,6 +247,15 @@ class Quiz(models.Model):
                            letter.isalnum() or letter == '-')
 
         if self.single_attempt is True:
+            self.exam_paper = True
+        
+        if self.attempt_choise == 'D':
+            self.exam_paper = True
+        
+        if self.attempt_choise == 'M':
+            self.exam_paper = True
+        
+        if self.attempt_choise == 'Y':
             self.exam_paper = True
 
         if self.pass_mark > 100:
@@ -425,10 +448,23 @@ class SittingManager(models.Manager):
         return new_sitting
 
     def user_sitting(self, user, quiz):
+        now_date = datetime.datetime.now().date()
+        now_month = datetime.datetime.now().month
+        now_year = datetime.datetime.now().year
+
         if quiz.single_attempt is True and self.filter(user=user,
                                                        quiz=quiz,
                                                        complete=True)\
                                                .exists():
+            return False
+
+        if quiz.attempt_choise == 'D' and self.filter(user=user, quiz=quiz, complete=True, end__date=now_date).exists():
+            return False
+        
+        if quiz.attempt_choise == 'M' and self.filter(user=user, quiz=quiz, complete=True, end__month=now_month).exists():
+            return False
+        
+        if quiz.attempt_choise == 'Y' and self.filter(user=user, quiz=quiz, complete=True, end__year=now_year).exists():
             return False
 
         try:

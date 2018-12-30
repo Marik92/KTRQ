@@ -1,6 +1,6 @@
 from django import forms
 from django.forms.widgets import RadioSelect, Textarea
-from .models import UserProfile
+from .models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -19,13 +19,19 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2',)
 
 class UserForm(forms.ModelForm):
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email')
+        fields = ('first_name', 'last_name', 'email', 'username')
 
 class ProfileForm(forms.ModelForm):
-
+    city = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    filial = forms.ModelChoiceField(queryset=Filial.objects.all(), empty_label="Пусто", widget=forms.Select(attrs={'class': 'form-control'}))
+    department = forms.ModelChoiceField(queryset=Department.objects.all(), empty_label="Пусто", widget=forms.Select(attrs={'class': 'form-control'}))
+    position = forms.ModelChoiceField(queryset=Position.objects.all(), empty_label="Пусто", widget=forms.Select(attrs={'class': 'form-control'}))
     class Meta:
         model = UserProfile
         fields = ('city', 'filial', 'department', 'position')

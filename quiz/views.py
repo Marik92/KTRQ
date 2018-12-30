@@ -308,6 +308,9 @@ class QuizTake(FormView):
     def anon_load_sitting(self):
         if self.quiz.single_attempt is True:
             return False
+        
+        if self.quiz.attempt_choise == 'D':
+            return False
 
         if self.quiz.anon_q_list() in self.request.session:
             return self.request.session[self.quiz.anon_q_list()]
