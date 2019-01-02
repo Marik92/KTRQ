@@ -408,7 +408,7 @@ class Progress(models.Model):
 
     def show_exams(self):
         """
-        Находит предыдущие записи сдачи тестов промаркированных как 'exam papers'
+        Находит предыдущие записи сдачи тестов промаркированных 'exam papers'
         и возвращает список успешных тестов.
         """
         return Sitting.objects.filter(user=self.user, complete=True)
@@ -480,15 +480,14 @@ class Sitting(models.Model):
     """
     Данный класс используется для сохранения прогресса тестируемого.
     Подменяет сессию, используемую анонимными пользователями
-    Question_order это список PKs или IDs всех вопросов в данном тесте
+    Question_order это список IDs всех вопросов в данном тесте
     Question_list это список чисел, которые показывают IDs всех неотвеченных
     пользователем вопросов в csv-формате.
     Incorrect_questions это список IDs всех вопросов на которые пользователь
     ответил неправильно в csv-формате.
     Sitting удаляется когда тест заканчивается, если quiz.exam_paper == True
-    User_answers это объект в формате JSON в котором сохранятся все PKs или IDs вопросов 
+    User_answers это объект в формате JSON в котором сохраняются все IDs вопросов 
     на которые пользователь дал ответ.
-
     """
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=("Пользователь"))
@@ -632,7 +631,6 @@ class Sitting(models.Model):
             user_answers = json.loads(self.user_answers)
             for question in questions:
                 question.user_answer = user_answers[str(question.id)]
-
         return questions
 
     @property
@@ -763,7 +761,13 @@ class Question (models.Model):
                 self.order_answers(Answer.objects.filter(question=self))]
 
     def answer_choice_to_string(self, guess):
-        return Answer.objects.get(id=guess).answer
+        list_of_answers = []
+        if type(guess) == list:
+            for answer_id in guess:
+                list_of_answers.append(Answer.objects.get(id=answer_id).answer)
+            return list_of_answers
+        else:
+            return Answer.objects.get(id=guess).answer
 
     
     objects = InheritanceManager()

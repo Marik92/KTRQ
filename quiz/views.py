@@ -1,4 +1,5 @@
 import random
+from django.db.models import Q
 from django.db import transaction
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
@@ -6,11 +7,11 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render, redirect, HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, FormView
-from django.contrib.auth.forms import UserCreationForm, User
+from django.contrib.auth.forms import UserCreationForm, User, PasswordChangeForm
 from django.views.generic.edit import FormView
 from .forms import QuestionForm, SignUpForm, ProfileForm, UserForm
 from .models import Quiz, Category, Progress, Sitting, Question, UserProfile
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, update_session_auth_hash
 
 def home(request):
     """Функция рендерит html-страницу и передает ей объекты из модели"""
@@ -40,16 +41,49 @@ def profile(request):
             user_form.save()
             profile_form.save()
             messages.success(request, ('Your profile was successfully updated!'))
-            return redirect('settings:profile')
+            return redirect('profile')
         else:
             messages.error(request, ('Please correct the error below.'))
     else:
+        success_exams = []
+        failed_exams = []
         user_form = UserForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.userprofile)
+        progress, c = Progress.objects.get_or_create(user=request.user)
+        all_exams = Sitting.objects.filter(user=request.user)
+        for i in all_exams:
+            if i.get_percent_correct >= i.quiz.pass_mark:
+                print (i.quiz.pass_mark)
+                success_exams.append(i)
+            else:
+                failed_exams.append(i)
+        
+        
     return render(request, 'profile.html', {
         'user_form': user_form,
-        'profile_form': profile_form
+        'profile_form': profile_form,
+        'exams': progress.show_exams(),
+        'success_exams': success_exams,
+        'failed_exams': failed_exams
     })
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('change_password')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'change_password.html', {
+        'form': form
+    })
+
+
 
 class QuizMarkerMixin(object):
     @method_decorator(login_required)
@@ -155,12 +189,14 @@ class QuizMarkingList(QuizMarkerMixin, SittingFilterTitleMixin, ListView):
     model = Sitting
 
     def get_queryset(self):
+        '''Функция позволяет производить поиск в таблице по имени
+        или фамилии пользователя в темлэйте marking'''
         queryset = super(QuizMarkingList, self).get_queryset()\
                                                .filter(complete=True)
 
         user_filter = self.request.GET.get('user_filter')
         if user_filter:
-            queryset = queryset.filter(user__username__icontains=user_filter)
+            queryset = queryset.filter(Q(user__first_name__icontains=user_filter) | Q(user__last_name__icontains=user_filter))
 
         return queryset
 
@@ -185,6 +221,7 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
         context = super(QuizMarkingDetail, self).get_context_data(**kwargs)
         context['questions'] =\
             context['sitting'].get_questions(with_answers=True)
+        print (context)
         return context
 
 
@@ -444,9 +481,11 @@ def anon_session_score(session, to_add=0, possible=0):
 class GraphView(TemplateView):
     template_name = 'graphs.html'
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, cat_name, **kwargs):
         context = super(GraphView, self).get_context_data(**kwargs)
         progress, c = Progress.objects.get_or_create(user=self.request.user)
+        exams_for_graph = Sitting.objects.filter(user=self.request.user, complete=True, quiz__category__category=cat_name)
         context['cat_scores'] = progress.list_all_cat_scores
         context['exams'] = progress.show_exams()
+        context['category'] = exams_for_graph[0].quiz.category
         return context

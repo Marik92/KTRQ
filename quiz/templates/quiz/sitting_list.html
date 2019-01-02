@@ -3,17 +3,18 @@
 {% block title %}{% trans "Все тесты" %}{% endblock %}
 
 {% block content %}
-<h2>{% trans "Список завершенных тестов" %}</h2>
+<h2>{% trans "Результаты тестов" %}</h2>
     {% if sitting_list %}
 
-		<table class="table table-bordered table-striped">
+		<table class="table table-hover table-bordered">
 
-		  <thead>
+		  <thead class="thead-dark">
 			<tr>
 			  <th>{% trans "Пользователь" %}</th>
 			  <th>{% trans "Тест" %}</th>
 			  <th>{% trans "Дата сдачи" %}</th>
-			  <th>{% trans "Результат" %} (%)</th>
+				<th>{% trans "В процентах (%)" %}</th>
+				<th>{% trans "Результат" %}</th>
 			  <th></th>
 			</tr>
 		  </thead>
@@ -25,7 +26,8 @@
 				<td><input type="text" name="quiz_filter" /></td>
 				<td></td>
 				<td></td>
-				<td><button type="submit" class="btn btn-default">{% trans "Поиск" %}</button></td>
+				<td></td>
+				<td><button type="submit" class="btn btn-primary">{% trans "Поиск" %}</button></td>
 			  </form>
 			</tr>
 
@@ -33,10 +35,17 @@
         {% for sitting in sitting_list %}
 
 			<tr>
-			  <td>{{ sitting.user }}</td>
-			  <td>{{ sitting.quiz }}</td>
-			  <td>{{ sitting.end|date }}</td>
-			  <td>{{ sitting.get_percent_correct }}</td>
+			  <td>{{ sitting.user.last_name }} {{ sitting.user.first_name }}</td>
+				<td>{{ sitting.quiz }}</td>
+				{% language 'ru' %}
+					<td>{{ sitting.end|date }}</td>
+				{% endlanguage %}
+				<td>{{ sitting.get_percent_correct }} %</td>
+				{% if sitting.get_percent_correct >= sitting.quiz.pass_mark %}
+					<td class="table-success">{% trans "Сдал" %}</td>
+				{% else %}
+					<td class="table-danger">{% trans "Провалил" %}</td>
+				{% endif %}
 			  <td>
 				<a href="{% url 'quiz_marking_detail' pk=sitting.id %}">
 				  {% trans "Детали" %}

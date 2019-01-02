@@ -10,17 +10,17 @@
 
   {% if cat_scores %}
 
-  <h1>{% trans "Результаты по категориям вопросов" %}</h1>
+  <h1>{% trans "Общие результаты тестов по категориям" %}</h1>
 
-  <table class="table table-bordered table-striped">
+  <table class="table table-hover table-bordered">
 
-	<thead>
+	<thead class="thead-dark">
 	  <tr>
-		<th>{% trans "Категория" %}</th>
-		<th>{% trans "Правильные" %}</th>
-		<th>{% trans "Неправильные" %}</th>
-		<th>{% trans "В процентах (%)" %}</th>
-		<th>{% trans "График" %}</th>
+			<th scope="col">{% trans "Категория" %}</th>
+			<th>{% trans "Правильные" %}</th>
+			<th>{% trans "Неправильные" %}</th>
+			<th>{% trans "В процентах (%)" %}</th>
+			<th>{% trans "График" %}</th>
 	  </tr>
 	</thead>
 
@@ -33,7 +33,7 @@
 		<td>{{ value.0 }}</td>
 		<td>{{ value.1 }}</td>
 		<td>{{ value.2 }}</td>
-		<td><a href="/quiz/graphs/">График</a></td>
+		<td><a href="/quiz/graphs/{{ cat }}">График</a></td>
 	  </tr>
 
 	  {% endfor %}
@@ -49,20 +49,21 @@
 
   <hr>
 
-  <h1>{% trans "Результаты последних тестов" %}</h1>
+  <h1>{% trans "Результаты тестов" %}</h1>
   <p class="lead">
 	{% trans "Ниже приведены результаты тестов, которые вы сдавали." %}
   </p>
 
-  <table class="table table-bordered table-striped">
+  <table class="table table-hover table-bordered">
 
-	<thead>
+	<thead class="thead-dark">
 	  <tr>
 		<th>{% trans "Название теста" %}</th>
 		<th>{% trans "Дата сдачи" %}</th>
-		<th>{% trans "Результат" %}</th>
-		<th>{% trans "Максимальный результат" %}</th>
+		<th>{% trans "Баллы" %}</th>
+		<th>{% trans "Максимальный балл" %}</th>
 		<th>{% trans "В процентах (%)" %}</th>
+		<th>{% trans "Результат" %}</th>
 	  </tr>
 	</thead>
 
@@ -72,10 +73,17 @@
 
 	  <tr>
 		<td>{{ exam.quiz.title }}</td>
-		<td>{{ exam.end }}</td>
+		{% language 'ru' %}
+			<td>{{ exam.end }}</td>
+		{% endlanguage %}
 		<td>{{ exam.current_score }}</td>
 		<td>{{ exam.get_max_score }}</td>
 		<td>{{ exam.get_percent_correct }}{% trans "%" %}</td>
+		{% if exam.get_percent_correct >= exam.quiz.pass_mark %}
+			<td class="table-success">{% trans "Сдал" %}</td>
+		{% else %}
+			<td class="table-danger">{% trans "Провалил" %}</td>
+		{% endif %}
 	  </tr>
 
 	  {% endfor %}

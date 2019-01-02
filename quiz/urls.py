@@ -6,7 +6,13 @@ from .views import home, profile, QuizListView, QuizListViewPte, QuizListViewOth
 
 
 urlpatterns = (url(r'^$', views.home, name='home'),
-                       url(r'profile/$', views.profile, name='profile' ), 
+                       url(r'profile/$', 
+                       views.profile, 
+                       name='profile' ),
+
+                       url(r'change_password/$', 
+                       views.change_password, 
+                       name='change_password' ),  
 
                        url(regex=r'^list/$',
                            view=QuizListView.as_view(),
@@ -20,7 +26,7 @@ urlpatterns = (url(r'^$', views.home, name='home'),
                            view=QuizListViewOther.as_view(),
                            name='quiz_index_other'),
 
-                       url(regex=r'^graphs/$',
+                       url(regex=r'^graphs/(?P<cat_name>(.*))/$',
                            view=GraphView.as_view(),
                            name='quiz_graph'),
 

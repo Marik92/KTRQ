@@ -47,6 +47,7 @@
                             </p>
                         </div>
                         <div class="col-md-6">
+                            
                             <h6>Recent Tags</h6>
                             <a href="" class="tag tag-default tag-pill">html5</a>
                             <a href="" class="tag tag-default tag-pill">react</a>
@@ -57,41 +58,33 @@
                             <a href="" class="tag tag-default tag-pill">bootstrap</a>
                             <a href="" class="tag tag-default tag-pill">responsive-design</a>
                             <hr>
-                            <span class="tag tag-primary"><i class="fa fa-user"></i> 900 Тестов</span>
-                            <span class="tag tag-success"><i class="fa fa-cog"></i> 43 Успешно</span>
-                            <span class="tag tag-danger"><i class="fa fa-eye"></i> 245 Провалено</span>
+                            <p><span class="tag tag-primary"><i class="fa fa-user"></i><div class="p-3 mb-2 bg-info text-white">Тестов пройдено: {{ exams|length }}</div></span></p>
+                            <p><span class="tag tag-success"><i class="fa fa-cog"></i><div class="p-3 mb-2 bg-success text-white">Сдал: {{ success_exams|length }}</div></span></p>
+                            <p><span class="tag tag-danger"><i class="fa fa-eye"></i><div class="p-3 mb-2 bg-danger text-white">Провалил: {{ failed_exams|length }}</div></span></p>
                         </div>
                         <div class="col-md-12">
-                            <h4 class="m-t-2"><span class="fa fa-clock-o ion-clock pull-xs-right"></span> Последние пройденные тесты</h4>
+                            <h4 class="m-t-2"><span class="fa fa-clock-o ion-clock pull-xs-right"></span>Последние пройденные тесты</h4>
+                            <a href='/quiz/progress' class=''>Посмотреть детали</a>
                             <table class="table table-hover table-striped">
-                                <tbody>                                    
+                                <thead>
                                     <tr>
-                                        <td>
-                                            <strong>Abby</strong> joined ACME Project Team in <strong>`Collaboration`</strong>
-                                        </td>
+                                        <th>Дата сдачи</th>
+                                        <th>Тест</th>
+                                        <th>Результат</th>
                                     </tr>
+                                </thead>
+                                <tbody>
+                                    {% for exam in exams|slice:":5" %} 
                                     <tr>
-                                        <td>
-                                            <strong>Gary</strong> deleted My Board1 in <strong>`Discussions`</strong>
-                                        </td>
-
+                                        <td>{{ exam.end }}</td>
+                                        <td>{{ exam.quiz.title }}</td>
+                                        {% if exam.get_percent_correct >= exam.quiz.pass_mark %}
+			                                <td class="table-success">{% trans "Сдан" %}</td>
+		                                {% else %}
+			                                <td class="table-danger">{% trans "Провален" %}</td>
+		                                {% endif %}
                                     </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>Kensington</strong> deleted MyBoard3 in <strong>`Discussions`</strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>John</strong> deleted My Board1 in <strong>`Discussions`</strong>
-                                        </td>
-
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>Skell</strong> deleted his post Look at Why this is.. in <strong>`Discussions`</strong>
-                                        </td>
-                                    </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
                         </div>
@@ -99,13 +92,13 @@
                     <!--/row-->
                 </div>
                 <div class="tab-pane" id="edit">
-                    <h4 class="m-y-2">Редактировать профиль</h4>
+                    <p><h4 class="m-y-2">Редактировать профиль</h4></p>
                     <form method="post">
                         {% csrf_token %}
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label form-control-label">Имя</label>
                             <div class="col-lg-9">
-                                    {{ user_form.first_name }}
+                                {{ user_form.first_name }}
                             </div>
                         </div>
                         <div class="form-group row">
@@ -135,38 +128,27 @@
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label form-control-label">Служба/Отдел</label>
                             <div class="col-lg-9">
-                                    {{ profile_form.department }}
+                                {{ profile_form.department }}
                             </div>  
                         </div>
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label form-control-label">Должность</label>
                             <div class="col-lg-9">
-                                    {{ profile_form.position}}
+                                {{ profile_form.position}}
                             </div>  
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-3 col-form-label form-control-label">Username</label>
+                            <label class="col-lg-3 col-form-label form-control-label">Логин</label>
                             <div class="col-lg-9">
                                 {{ user_form.username }}
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-3 col-form-label form-control-label">Password</label>
-                            <div class="col-lg-9">
-                                {{ user_form.password1 }}
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label form-control-label">Confirm password</label>
-                            <div class="col-lg-9">
-                                {{ user_form.password2 }}
-                            </div>
-                        </div>
-                        <div class="form-group row">
                             <label class="col-lg-3 col-form-label form-control-label"></label>
                             <div class="col-lg-9">
-                                <input type="reset" class="btn btn-secondary" value="Cancel">
-                                <button type="submit" class="btn btn-primary" value="Save Changes">
+                                <input type="reset" class="btn btn-outline-secondary" value="Отменить">
+                                <input type="submit" class="btn btn-outline-primary" value="Сохранить">
+                                <a href="change_password" class="btn btn-dark">Изменить пароль</a>
                             </div>
                         </div>
                     </form>

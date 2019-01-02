@@ -8,14 +8,8 @@
 
 {% block content %}
 
+{{ category }}
 
-{% if user.is_authenticated %}
-  <p>{% trans "Вы уже сдавали данный тест. Дается только одна попытка на сдачу!" %}.</p>
-
-
-{% else %}
-  <p>{% trans "Данный тест доступен только зарегестрированным пользователям!" %}.</p>
-{% endif %}
 <script src="https://code.highcharts.com/highcharts.src.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <div id="container" style="margin-top: 20%"></div>
@@ -37,7 +31,7 @@
                 text: 'График вашей результативности по сдаче теста'
             },
             xAxis: {
-                categories: [{% for exam in exams %}"{{ exam.end|date:"Y-m-d" }}"{% if not forloop.last %}, {% endif %}{% endfor %}]
+                categories: [{% for exam in exams %} {% if exam.quiz.category == category %} "{{ exam.end|date:"Y-m-d" }}" {% if not forloop.last %}, {% endif %} {% endif %} {% endfor %}]
             },
             yAxis: {
                 title: {
@@ -63,7 +57,7 @@
             },
             series: [{
                 name: 'Результат',
-                data: [{% for exam in exams %}{{ exam.get_percent_correct }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+                data: [{% for exam in exams %} {% if exam.quiz.category == category %} {{ exam.get_percent_correct }}{% if not forloop.last %}, {% endif %} {% endif %} {% endfor %}],
                 color: 'cornflowerblue'
             }]
         });

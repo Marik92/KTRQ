@@ -10,17 +10,19 @@
 <h3>{% trans "Категория" %}: {{ sitting.quiz.category }}</h3>
 <p>{% trans "Описание" %}: {{ sitting.quiz.description }}</p>
 <hr>
-<p>{% trans "Пользователь" %}: {{ sitting.user }}</p>
-<p>{% trans "Дата сдачи" %}: {{ sitting.end|date }}</p>
-<p>{% trans "Результат" %}: {{ sitting.get_percent_correct }}%</p>
+<p>{% trans "Пользователь" %}: <strong>{{ sitting.user.get_full_name }}</strong></p>
+{% language 'ru' %}
+	<p>{% trans "Дата сдачи" %}: <strong>{{ sitting.end|date }}</strong></p>
+{% endlanguage %}
+<p>{% trans "Результат" %}: <strong>{{ sitting.get_percent_correct }} %</strong></p>
 
-<table class="table table-bordered table-striped">
+<table class="table table-hover table-bordered">
 
-  <thead>
+  <thead class="thead-dark">
 	<tr>
 	  <th>{% trans "Вопрос" %}</th>
 	  <th>{% trans "Ответ пользователя" %}</th>
-	  <th></th>
+	  <th>{% trans "Правильность" %}</th>
 	  <th></th>
 	</tr>
   </thead>
@@ -36,11 +38,14 @@
         {% endif %}
       </td>
 	  <td>{{ question|answer_choice_to_string:question.user_answer }}</td>
-	  <td>
 		{% if question.id in sitting.get_incorrect_questions %}
-		  <p>{% trans "Неправильно" %}</p>
+			<td class="table-danger table-bordered">
+			<p>{% trans "Неправильно" %}</p>
+			</td>
 		{% else %}
-		  <p>{% trans "Правильно" %}</p>
+			<td class="table-success table-bordered">
+				<p>{% trans "Правильно" %}</p>
+			</td>
 		{% endif %}
 	  </td>
 	  <td>
