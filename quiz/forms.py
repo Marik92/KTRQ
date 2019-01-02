@@ -35,4 +35,4 @@ class ProfileForm(forms.ModelForm):
     position = forms.ModelChoiceField(queryset=Position.objects.all(), empty_label="Пусто", widget=forms.Select(attrs={'class': 'form-control'}))
     class Meta:
         model = UserProfile
-        fields = ('city', 'filial', 'department', 'position')
+        fields = ('city', 'filial', 'department', 'position', 'avatar')

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load staticfiles %}
 
 {% load quiz_tags %}
 
@@ -156,7 +157,8 @@
             </div>
         </div>
         <div class="col-lg-4 pull-lg-8 text-xs-center">
-            <img src="//placehold.it/150" class="m-x-auto img-fluid img-circle" alt="avatar">
+            <img src="{{ user.userprofile.avatar.url }}" width=240 alt="avatar">
+            
             <h6 class="m-t-2">Загрузить другое фото</h6>
             <label class="custom-file">
                 <input type="file" id="file" class="custom-file-input">
