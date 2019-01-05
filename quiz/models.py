@@ -72,7 +72,7 @@ class UserProfile(models.Model):
         null = True,
         on_delete=models.CASCADE)
 
-    avatar = models.ImageField(upload_to = 'quiz/static/quiz/images/', default = 'quiz/static/quiz/images/no-img.png')
+    avatar = models.ImageField(upload_to = 'profile_images/', default = 'profile_images/no-img.png')
 
     city = models.CharField(
         verbose_name=("Город/Село"),

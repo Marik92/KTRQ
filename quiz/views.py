@@ -1,4 +1,5 @@
 import random
+from math import sqrt,pi,exp,pow
 from django.db.models import Q
 from django.db import transaction
 from django.contrib import messages
@@ -57,8 +58,7 @@ def profile(request):
                 success_exams.append(i)
             else:
                 failed_exams.append(i)
-        
-        
+
     return render(request, 'profile.html', {
         'user_form': user_form,
         'profile_form': profile_form,
@@ -83,7 +83,92 @@ def change_password(request):
         'form': form
     })
 
+def rating_list(request):
+    """Функция рендерит html-страницу и передает ей объекты из модели"""
 
+    return render(request, 'rating_list.html')
+
+def standard_normal_distribution(x):
+	return (1./sqrt(2*pi))*exp(-0.5*pow(x,2))
+
+def snd(x):
+	return standard_normal_distribution(x)
+
+def ci_lower_bound(positive, total, power=0.001):
+    '''Функцию для подсчета рейтинга на основе алгоритма 
+    Эдвина Уилсона. Принимает в качестве аргументов: 
+    1) Число успешных тестов, которые сдал пользователь
+    2) Общее число тестов, которые прошел пользователь
+    3) Уровень надежности, дефолтный = 0.001, для расчета квантиля'''
+    if not total:
+        return 0
+    z = snd((1-power)/2)
+    n = total
+    phat = 1.0*positive/n
+    return (phat + z*z/(2*n) - z * sqrt((phat*(1-phat)+z*z/(4*n))/n))/(1+z*z/n)
+
+class LuckyRatingView(TemplateView):
+    template_name = 'rating_ten_lucky.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(LuckyRatingView, self).get_context_data(**kwargs)
+        users = User.objects.all()
+        user_result = {}
+        top_ten = {}
+        
+        for user in users:
+            progress, c = Progress.objects.get_or_create(user=user)
+            tests = progress.show_exams()
+            if len(tests) == 0:
+                pass
+            else:
+                count = 0
+                for objects in tests:
+                    if objects.get_percent_correct >= objects.quiz.pass_mark:
+                        count = count + 1
+                    else:
+                        pass
+                user_result[user] = [len(tests), count]
+        
+        for key, value in user_result.items():
+            rating = ci_lower_bound(value[1],value[0])
+            top_ten[key] = rating
+    
+        result = dict(sorted(top_ten.items(), key=lambda x: x[1], reverse=True))
+        context = {'form': result.items()}
+        return context
+
+class LooserRatingView(TemplateView):
+    template_name = 'rating_ten_looser.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(LooserRatingView, self).get_context_data(**kwargs)
+        users = User.objects.all()
+        user_result = {}
+        top_ten = {}
+        
+        for user in users:
+            progress, c = Progress.objects.get_or_create(user=user)
+            tests = progress.show_exams()
+            if len(tests) == 0:
+                pass
+            else:
+                count = 0
+                for objects in tests:
+                    if objects.get_percent_correct >= objects.quiz.pass_mark:
+                        count = count + 1
+                    else:
+                        pass
+                user_result[user] = [len(tests), count]
+        
+        for key, value in user_result.items():
+            rating = ci_lower_bound(value[1],value[0])
+            revert_rating = 1 - rating
+            top_ten[key] = revert_rating
+    
+        result = dict(sorted(top_ten.items(), key=lambda x: x[1], reverse=True))
+        context = {'form': result.items()}
+        return context
 
 class QuizMarkerMixin(object):
     @method_decorator(login_required)
@@ -221,7 +306,6 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
         context = super(QuizMarkingDetail, self).get_context_data(**kwargs)
         context['questions'] =\
             context['sitting'].get_questions(with_answers=True)
-        print (context)
         return context
 
 

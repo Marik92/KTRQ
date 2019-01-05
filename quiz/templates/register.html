@@ -1,11 +1,15 @@
-<head>
+{% extends "base.html" %}
+{% load i18n %}
 
-</head>
-<body>
-    <p></p>
+{% load quiz_tags %}
+
+{% block title %} {{ quiz.title}} {% endblock %}
+{% block description %} {% trans "Результаты теста:" %} {{ quiz.title }} {% endblock %}
+
+{% block content %}
     <form action="" method="post">{% csrf_token %}
         {{ form.as_p}}
         {{profile_form.as_p}}
         <button type="submit">Зарегестрироваться</button>
     </form>
-</body>
+{% endblock %}

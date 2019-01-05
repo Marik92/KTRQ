@@ -33,6 +33,7 @@ class ProfileForm(forms.ModelForm):
     filial = forms.ModelChoiceField(queryset=Filial.objects.all(), empty_label="Пусто", widget=forms.Select(attrs={'class': 'form-control'}))
     department = forms.ModelChoiceField(queryset=Department.objects.all(), empty_label="Пусто", widget=forms.Select(attrs={'class': 'form-control'}))
     position = forms.ModelChoiceField(queryset=Position.objects.all(), empty_label="Пусто", widget=forms.Select(attrs={'class': 'form-control'}))
+    avatar = forms.ImageField()
     class Meta:
         model = UserProfile
         fields = ('city', 'filial', 'department', 'position', 'avatar')

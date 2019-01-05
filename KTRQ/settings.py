@@ -124,6 +124,8 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'quiz/media')
 LOGIN_REDIRECT_URL = '/quiz'
 LOGOUT_REDIRECT_URL = '/accounts/login'
 AUTH_PROFILE_MODULE = "quiz.UserProfile"

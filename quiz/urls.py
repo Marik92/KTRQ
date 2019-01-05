@@ -1,18 +1,31 @@
 from django.conf.urls import url
 from . import views
-from .views import home, profile, QuizListView, QuizListViewPte, QuizListViewOther, CategoriesListView,\
-    ViewQuizListByCategory, QuizUserProgressView, QuizMarkingList,\
-    QuizMarkingDetail, QuizDetailView, QuizTake, GraphView
+from .views import *
 
 
-urlpatterns = (url(r'^$', views.home, name='home'),
+urlpatterns = (        url(r'^$', 
+                        views.home, 
+                        name='home'),
+
                        url(r'profile/$', 
                        views.profile, 
                        name='profile' ),
 
+                       url(r'rating_list/$', 
+                       views.rating_list, 
+                       name='rating_list' ),
+
                        url(r'change_password/$', 
                        views.change_password, 
-                       name='change_password' ),  
+                       name='change_password'), 
+
+                       url(regex=r'rating_list/rating_ten_lucky/$',
+                            view=LuckyRatingView.as_view(),
+                            name='rating_ten_lucky'),
+
+                        url(regex=r'rating_list/rating_ten_looser/$',
+                            view=LooserRatingView.as_view(),
+                            name='rating_ten_looser'), 
 
                        url(regex=r'^list/$',
                            view=QuizListView.as_view(),
