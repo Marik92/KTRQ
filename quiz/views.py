@@ -88,6 +88,16 @@ def rating_list(request):
 
     return render(request, 'rating_list.html')
 
+def rating_category_list(request):
+    """Функция рендерит html-страницу и передает ей объекты из модели"""
+    cat_list = Category.objects.all()
+    return render(request, 'rating_category_list.html', {'cat_list': cat_list})
+
+def rating_tests_list(request):
+    """Функция рендерит html-страницу и передает ей объекты из модели"""
+    quiz_list = Quiz.objects.filter(draft=False)
+    return render(request, 'rating_tests_list.html', {'quiz_list': quiz_list})
+
 def standard_normal_distribution(x):
 	return (1./sqrt(2*pi))*exp(-0.5*pow(x,2))
 
@@ -169,6 +179,55 @@ class LooserRatingView(TemplateView):
         result = dict(sorted(top_ten.items(), key=lambda x: x[1], reverse=True))
         context = {'form': result.items()}
         return context
+
+class QuizRatingDetailView(TemplateView):
+    template_name = 'rating_quiz_detail.html'
+    
+    def get_context_data(self, quiz_id, **kwargs):
+        context = super(QuizRatingDetailView, self).get_context_data(**kwargs)
+        users = User.objects.all()
+        user_result = {}
+        top_ten = {}
+
+        for user in users:
+            tests = Sitting.objects.filter(complete=True, quiz__id=quiz_id, user=user)
+
+            if len(tests) == 0:
+                pass
+            else:
+                count = 0
+                for objects in tests:
+                    if objects.get_percent_correct >= objects.quiz.pass_mark:
+                        count = count + 1
+                    else:
+                        pass
+                user_result[user] = [len(tests), count]
+
+        context['exams'] = tests
+        
+        for key, value in user_result.items():
+            rating = ci_lower_bound(value[1],value[0])
+            top_ten[key] = rating
+    
+        result = dict(sorted(top_ten.items(), key=lambda x: x[1], reverse=True))
+        context = {'form': result.items()}
+        return context
+
+
+class CategoryRatingDetailView(TemplateView):
+    template_name = 'rating_quiz_detail.html'
+    
+    def get_context_data(self, cat_id, **kwargs):
+        context = super(CategoryRatingDetailView, self).get_context_data(**kwargs)
+        users = User.objects.all()
+
+        for user in users:
+            progress, c = Progress.objects.get_or_create(user=user)
+            context[user] = progress.list_all_cat_scores
+            print (progress)
+
+        return context
+
 
 class QuizMarkerMixin(object):
     @method_decorator(login_required)
@@ -274,8 +333,9 @@ class QuizMarkingList(QuizMarkerMixin, SittingFilterTitleMixin, ListView):
     model = Sitting
 
     def get_queryset(self):
-        '''Функция позволяет производить поиск в таблице по имени
-        или фамилии пользователя в темлэйте marking'''
+        '''Функция возвращает список выполненных тестов
+        позволяет и позволяет производить поиск в таблице по имени
+        или фамилии пользователя в темплэйте sitting_list'''
         queryset = super(QuizMarkingList, self).get_queryset()\
                                                .filter(complete=True)
 

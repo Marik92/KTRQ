@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% load quiz_tags %}
+
+{% block title %} {{ quiz.title}} {% endblock %}
+{% block description %} {% trans "Результаты теста:" %} {{ quiz.title }} {% endblock %}
+
+{% block content %}
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/pareto.js"></script>
+<div id="container">
+    <script>
+        $(function () {
+            var chart = new Highcharts.chart('container', {
+                chart: {
+                    renderTo: 'container',
+                    type: 'column',
+                    width: 1000,
+                    height: 700,
+                    style: {
+                        fontSize: '15px'
+                    },
+                },
+                title: {
+                    text: 'Топ 10 везунчиков',
+                    style: {
+                        color: 'black',
+                        fontSize: '25px',
+                        fontWeight: 'bold'
+                    }
+                },
+                tooltip: {
+                    shared: true
+                },
+                legend: {
+                    itemStyle: {
+                        fontWeight: 'bold',
+                        fontSize: '15px'
+                    }
+                },
+                xAxis: {
+                    categories: [{% for k,v in form %} "{{ k.last_name }} {{ k.first_name }}" {% if not forloop.last %}, {% endif %} {% endfor %}],
+                    crosshair: true,
+                    labels: {
+                        style: {
+                            color: 'black',
+                            fontSize:'15px'
+                        }
+                    }
+                },          
+                yAxis: [{
+                    title: {
+                        text: 'Коэффициент'
+                    },
+                    labels: {
+                        style: {
+                            color: 'black',
+                            fontSize:'15px'
+                        }
+                    }
+                },],
+                series: [{
+                    name: 'Коэффицент эффективности (по формуле Эдвина Вилсона)',
+                    type: 'column',
+                    color: 'Gold ',
+                    zIndex: 2,
+                    data: [{% for k,v in form %} {{ v }} {% if not forloop.last %}, {% endif %} {% endfor %}]}]
+            });
+        });
+    </script>
+</div>
+{% endblock %}

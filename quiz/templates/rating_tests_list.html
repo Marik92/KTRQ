@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% load quiz_tags %}
+
+{% block title %} {{ quiz.title}} {% endblock %}
+{% block description %} {% trans "Результаты теста:" %} {{ quiz.title }} {% endblock %}
+
+{% block content %}
+<h2>{% trans "Рейтинг пользователей по отдельным тестам" %}</h2>
+    {% if quiz_list %}
+        <table class="table table-hover table-bordered">
+
+            <thead class="thead-dark">
+                <tr>
+                    <th>{% trans "Тест" %}</th>
+                    <th>{% trans "Рейтинг" %}</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for quiz in quiz_list %}
+                <tr>
+                    <td>{{ quiz }}</td>
+                    <td><a href='rating_tests_list/{{ quiz.id }}'>Рейтинг</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+                
+    {% endif %}
+{% endblock %}

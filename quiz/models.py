@@ -728,13 +728,11 @@ class Question (models.Model):
                 correct_answers_ids.append(ids)
             else:
                 pass
-        print (correct_answers_ids)
 
         #Вытаскиваем ID-шники ответов пользователя и если они 
         user_answers_ids = []
         for guess in guess_list:
             user_answers_ids.append(int(guess))
-        print (user_answers_ids)
         
         #Сравниваем список с правильными ответам и список с ответами пользователя с помощью кортежей
         #если списки одинаковые то выдаст такое же кол-во элементов что и в списке с правильными ответами
