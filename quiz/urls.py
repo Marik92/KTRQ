@@ -10,6 +10,10 @@ urlpatterns = (         url(r'^$',
                         url(r'profile/$', 
                             views.profile, 
                             name='profile' ),
+                        
+                        url(r'profile_get/(?P<user_id>\d+)/$', 
+                            views.profile_get, 
+                            name='profile_get' ),
 
                         url(r'^rating_list/$', 
                             views.rating_list, 

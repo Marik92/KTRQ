@@ -42,7 +42,7 @@
                     }
                 },
                 xAxis: {
-                    categories: [{% for k,v in form %} "{{ k.last_name }} {{ k.first_name }}" {% if not forloop.last %}, {% endif %} {% endfor %}],
+                    categories: [{% for k,v in form %} "<a href='/quiz/profile_get/{{ k.id }}'>{{ k.last_name }} {{ k.first_name }}</a>" {% if not forloop.last %}, {% endif %} {% endfor %}],
                     crosshair: true,
                     labels: {
                         style: {

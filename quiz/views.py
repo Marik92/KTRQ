@@ -3,6 +3,7 @@ from math import sqrt,pi,exp,pow
 from django.db.models import Q
 from django.db import transaction
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render, redirect, HttpResponse
@@ -66,6 +67,16 @@ def profile(request):
         'success_exams': success_exams,
         'failed_exams': failed_exams
     })
+
+
+def profile_get(request, user_id):
+    try:
+        user_form = User.objects.get(id=user_id)
+        print (user_form)
+    except ObjectDoesNotExist:
+        print ('GGWP')
+
+    return render(request, 'profile_get.html', {'user_form': user_form})
 
 def change_password(request):
     if request.method == 'POST':
