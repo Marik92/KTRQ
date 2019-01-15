@@ -101,7 +101,7 @@ class UserProfile(models.Model):
     def __str__(self):
         return "%s's profile" % self.user
 
-User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0]) 
+    User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0]) 
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -184,10 +184,14 @@ class Quiz(models.Model):
         max_length=60, blank=False,
         help_text=("Читаемая url-ссылка для пользователя"),
         verbose_name=("user friendly url"))
+    
+    filial = models.ForeignKey(
+        Filial, null=True, blank=True, default='Все', on_delete=models.CASCADE,
+        verbose_name=("Филиал"), help_text=("Выберите филиал, для которого будет доступен тест. Если вы хотите, что бы тест был доступен всем, то оставьте это поле без изменений"))
 
     category = models.ForeignKey(
         Category, null=True, blank=True, on_delete=models.CASCADE,
-        verbose_name=("Категория"))
+        verbose_name=("Категория"), help_text=("Выберите категорию теста"))
 
     random_order = models.BooleanField(
         blank=False, default=True,

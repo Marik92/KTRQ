@@ -9,12 +9,16 @@
 
 {% block content %}
 
+<h1>Мой профиль</h1>
+
+<hr>
+
 <div class="container">
     <div class="row m-y-2">
         <div class="col-lg-8 push-lg-4">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a href="" data-target="#profile" data-toggle="tab" class="nav-link active">Мой Профиль</a>
+                    <a href="" data-target="#profile" data-toggle="tab" class="nav-link active">Профиль</a>
                 </li>
                 <li class="nav-item">
                     <a href="" data-target="#edit" data-toggle="tab" class="nav-link">Редактировать профиль</a>
@@ -75,9 +79,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for exam in exams|slice:":5" %} 
+                                    {% for exam in exams|slice:"::-1"|slice:":5"  %} 
                                     <tr>
-                                        <td>{{ exam.end }}</td>
+                                        {% language 'ru' %}
+                                            <td>{{ exam.end }}</td>
+                                        {% endlanguage %}
                                         <td>{{ exam.quiz.title }}</td>
                                         {% if exam.get_percent_correct >= exam.quiz.pass_mark %}
 			                                <td class="table-success">{% trans "Сдан" %}</td>
@@ -158,11 +164,6 @@
         </div>
         <div class="col-lg-4 pull-lg-8 text-xs-center">
             <img src="{{ user.userprofile.avatar.url }}" class="rounded-circle" width=200 height="200" alt="avatar">         
-            <h6 class="m-t-2">Загрузить другое фото</h6>
-            <label class="custom-file">
-                <input type="file" name='avatar' id="id_avatar" class="custom-file-input">
-                <span class="custom-file-control">Выберите файл</span>
-            </label>
         </div>
     </div>
 </div>

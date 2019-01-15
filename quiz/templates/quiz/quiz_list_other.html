@@ -3,7 +3,9 @@
 {% block title %}{% trans "Остальные тесты" %}{% endblock %}
 
 {% block content %}
+
 <h2>{% trans "Список тестов" %}</h2>
+<hr>
     {% if quiz_list %}
 		<table class="table table-hover table-bordered">
 		  	<thead class='thead-dark'>
@@ -17,30 +19,59 @@
 				</tr>
 		  	</thead>
 		  	<tbody>
-				{% for quiz in quiz_list %}
-					{% ifequal quiz.category.category "Остальное" %}
-  						<tr>
-			  				<td>{{ quiz.title }}</td>
-							<td>{{ quiz.category }}</td>
-							{% if quiz.exam_paper == True %}
-								<td>{% trans "Да" %}</td>
-							{% else %}
-								<td>{% trans "Нет" %}</td>
+				{% if not request.user.is_superuser %}
+					{% for quiz in quiz_list %}
+						{% ifequal quiz.category.category "Остальное" %}
+							{% if quiz.filial == user.userprofile.filial or quiz.filial == Все %}
+								<tr>
+									<td>{{ quiz.title }}</td>
+									<td>{{ quiz.category }}</td>
+									{% if quiz.exam_paper == True %}
+										<td>{% trans "Да" %}</td>
+									{% else %}
+										<td>{% trans "Нет" %}</td>
+									{% endif %}
+									{% if quiz.single_attempt == True %}
+										<td>{% trans "Да" %}</td>
+									{% else %}
+										<td>{% trans "Нет" %}</td>
+									{% endif %}
+									<td>{{ quiz.attempt_choise }}</td>
+									<td>
+										<a href="{% url 'quiz_start_page' slug=quiz.url %}">
+										{% trans "Выбрать" %}
+										</a>
+									</td>
+								</tr>
 							{% endif %}
-							{% if quiz.single_attempt == True %}
-								<td>{% trans "Да" %}</td>
-							{% else %}
-								<td>{% trans "Нет" %}</td>
-							{% endif %}
-							<td>{{ quiz.attempt_choise }}</td>
-			  				<td>
-								<a href="{% url 'quiz_start_page' slug=quiz.url %}">
-				  				{% trans "Выбрать" %}
-								</a>
-							</td>
-						</tr>
-					{% endifequal %}
-        		{% endfor %}
+						{% endifequal %}
+					{% endfor %}
+				{% else %}
+					{% for quiz in quiz_list %}
+						{% ifequal quiz.category.category "Остальное" %}
+							<tr>
+								<td>{{ quiz.title }}</td>
+								<td>{{ quiz.category }}</td>
+								{% if quiz.exam_paper == True %}
+									<td>{% trans "Да" %}</td>
+								{% else %}
+									<td>{% trans "Нет" %}</td>
+								{% endif %}
+								{% if quiz.single_attempt == True %}
+									<td>{% trans "Да" %}</td>
+								{% else %}
+									<td>{% trans "Нет" %}</td>
+								{% endif %}
+								<td>{{ quiz.attempt_choise }}</td>
+								<td>
+									<a href="{% url 'quiz_start_page' slug=quiz.url %}">
+									{% trans "Выбрать" %}
+									</a>
+								</td>
+							</tr>
+						{% endifequal %}
+					{% endfor %}
+				{% endif %}
 		  	</tbody>
 		</table>
 	{% else %}

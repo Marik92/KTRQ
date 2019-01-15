@@ -3,6 +3,8 @@ from math import sqrt,pi,exp,pow
 from django.db.models import Q
 from django.db import transaction
 from django.contrib import messages
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
@@ -40,6 +42,7 @@ def profile(request):
         user_form = UserForm(request.POST, instance=request.user)
         profile_form = ProfileForm(request.POST, instance=request.user.userprofile)
         if user_form.is_valid() and profile_form.is_valid():
+            #handle_uploaded_file(request.FILES['avatar'])
             user_form.save()
             profile_form.save()
             messages.success(request, ('Your profile was successfully updated!'))
@@ -47,18 +50,20 @@ def profile(request):
         else:
             messages.error(request, ('Please correct the error below.'))
     else:
-        success_exams = []
-        failed_exams = []
-        user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.userprofile)
-        progress, c = Progress.objects.get_or_create(user=request.user)
-        all_exams = Sitting.objects.filter(user=request.user)
-        for i in all_exams:
-            if i.get_percent_correct >= i.quiz.pass_mark:
-                print (i.quiz.pass_mark)
-                success_exams.append(i)
-            else:
-                failed_exams.append(i)
+        user_form = UserForm()
+        profile_form = ProfileForm()
+
+    success_exams = []
+    failed_exams = []
+    user_form = UserForm(instance=request.user)
+    profile_form = ProfileForm(instance=request.user.userprofile)
+    progress, c = Progress.objects.get_or_create(user=request.user)
+    all_exams = Sitting.objects.filter(user=request.user)
+    for i in all_exams:
+        if i.get_percent_correct >= i.quiz.pass_mark:
+            success_exams.append(i)
+        else:
+            failed_exams.append(i)
 
     return render(request, 'profile.html', {
         'user_form': user_form,
@@ -67,6 +72,12 @@ def profile(request):
         'success_exams': success_exams,
         'failed_exams': failed_exams
     })
+
+def handle_uploaded_file(f):
+    with open('quiz/media/profile_images/' + str(f), 'wb+') as destination:
+        print ('YES')
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 
 def profile_get(request, user_id):

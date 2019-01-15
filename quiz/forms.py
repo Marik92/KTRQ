@@ -36,4 +36,4 @@ class ProfileForm(forms.ModelForm):
     avatar = forms.ImageField()
     class Meta:
         model = UserProfile
-        fields = ('city', 'filial', 'department', 'position', 'avatar')
+        fields = ('city', 'filial', 'department', 'position', 'avatar',)
