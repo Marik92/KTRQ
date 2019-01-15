@@ -98,8 +98,12 @@ class UserProfile(models.Model):
         null=True,
     )
 
+    class Meta:
+        verbose_name = ("Личный профиль пользователя")
+        verbose_name_plural = ("Личный профиль пользователей")
+
     def __str__(self):
-        return "%s's profile" % self.user
+        return "Профиль пользователя: %s" % self.user
 
     User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0]) 
 

@@ -1,4 +1,5 @@
 from django import forms
+import json
 from django.forms.widgets import RadioSelect, Textarea
 from .models import *
 from django.contrib.auth.models import User
@@ -29,11 +30,27 @@ class UserForm(forms.ModelForm):
         fields = ('first_name', 'last_name', 'email', 'username')
 
 class ProfileForm(forms.ModelForm):
+
+    dpositions = {}
+    list_positions = []
+    for position in Position.objects.all():
+        if position.department.name in dpositions:
+            dpositions[position.department.name].append(position.name)
+        else:
+            dpositions[position.department.name] = [position.name]
+        list_positions.append((position.name,position.name))
+
+    departments = [str(department) for department in Department.objects.all()]
+
     city = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     filial = forms.ModelChoiceField(queryset=Filial.objects.all(), empty_label="Пусто", widget=forms.Select(attrs={'class': 'form-control'}))
-    department = forms.ModelChoiceField(queryset=Department.objects.all(), empty_label="Пусто", widget=forms.Select(attrs={'class': 'form-control'}))
-    position = forms.ModelChoiceField(queryset=Position.objects.all(), empty_label="Пусто", widget=forms.Select(attrs={'class': 'form-control'}))
+    department = forms.ChoiceField(choices=([(department, department) for department in departments]), widget=forms.Select(attrs={'class': 'form-control'}))
+    position = forms.ChoiceField(choices=(list_positions), widget=forms.Select(attrs={'class': 'form-control'}))
     avatar = forms.ImageField()
+
+    departments = json.dumps(departments)
+    positions = json.dumps(dpositions)
+
     class Meta:
         model = UserProfile
         fields = ('city', 'filial', 'department', 'position', 'avatar',)

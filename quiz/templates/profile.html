@@ -141,7 +141,7 @@
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label form-control-label">Должность</label>
                             <div class="col-lg-9">
-                                {{ profile_form.position}}
+                                {{ profile_form.position }}
                             </div>  
                         </div>
                         <div class="form-group row">
@@ -168,4 +168,40 @@
     </div>
 </div>
 <hr>
+<script language="javascript">
+    $('#id_department').change(function() {populatePosition(this)});
+    positions = {{ profile_form.positions | safe }}
+    departments = {{ profile_form.departments | safe }};
+    console.log('departments');
+    populateDepartment();
+    $("#id_position").empty();
+    $("#id_position").append('<option value="" disabled selected>Пусто</option>');
+    function populateDepartment() {
+        $('#id_department').empty();
+        $("#id_department").append('<option value="" disabled selected>Пусто</option>');
+        $.each(departments, function(v) {
+            $('#id_department')
+                .append($("<option></option>")
+                .attr("value", departments[v])
+                .text(departments[v]));
+        });
+    }
+
+    function populatePosition(event) {
+        department = $("#id_department option:selected").text();
+        $("#id_position").empty();
+        $("#id_position").append('<option value="" disabled selected>Пусто</option>');
+        for (let [b, bpositions] of Object.entries(positions)) {
+            if (b == department) {
+                //alert(b);
+                for (position in bpositions) {
+                    $('#id_position')
+                        .append($("<option></option>")
+                            .attr("value", bpositions[position])
+                            .text(bpositions[position]));
+                }
+            }
+        }
+    }
+</script>
 {% endblock %}

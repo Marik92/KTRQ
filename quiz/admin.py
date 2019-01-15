@@ -42,8 +42,8 @@ class QuizAdminForm(forms.ModelForm):
 class QuizAdmin(admin.ModelAdmin):
     form = QuizAdminForm
 
-    list_display = ('title', )
-    search_fields = ('description',)
+    list_display = ('title', 'category', 'filial')
+    search_fields = ('title',)
 
 class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('category', )
@@ -63,34 +63,41 @@ class ProgressAdmin(admin.ModelAdmin):
 
 class AnswerInline(admin.TabularInline):
     model = Answer
-    extra = 4
+    extra = 0
 
 class QuestionAdmin(admin.ModelAdmin):
     fields = ['question', 'category', 'sub_category',
               'figure', 'answer_order', 'explanation']
     inlines = [AnswerInline]
-    search_fields = ['category',]
+    list_display = ['question', 'category', 'sub_category',]
+    search_fields = ('question', 'category__category',)
 
 class UserProfileAdmin(admin.ModelAdmin):
-    search_fields = ['name']
+    model = UserProfile
+    search_fields = ['user__username', 'city', 'filial__name', 'department__name', 'position__name']
+    list_display = ['user', 'get_full_name', 'city', 'filial', 'department', 'position']
+
+    def get_full_name(self, obj):
+        full_name = obj.user.last_name + ' ' + obj.user.first_name
+        return full_name
 
 
 class PositionAdmin(admin.ModelAdmin):
     search_fields = ['name']
+    list_display = ['name', 'department', 'filial']
     
 class DepartmentAdmin(admin.ModelAdmin):
     search_fields = ['name']
+    list_display = ['name', 'filial']
 
 class FilialAdmin(admin.ModelAdmin):
-    search_fields = ['user']
+    search_fields = ['name']
+
 
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(SubCategory, SubCategoryAdmin)
-admin.site.register(Progress, ProgressAdmin)
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(correctValue)
-admin.site.register(Answer)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Position, PositionAdmin)
 admin.site.register(Department, DepartmentAdmin)
