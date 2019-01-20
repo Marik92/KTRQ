@@ -1,27 +1,27 @@
 {% extends "base.html" %}
 {% load i18n %}
-
 {% load quiz_tags %}
 
-{% block title %} {{ quiz.title}} {% endblock %}
-{% block description %} {% trans "Результаты теста:" %} {{ quiz.title }} {% endblock %}
+{% block title %} 
+    {% trans "Рейтинги" %} 
+{% endblock %}
 
 {% block content %}
-<!-- Price-Table -->
-<hr>
 <section id="price_table">
     <div class="container">
-      <div class="row text-center" id="heading">
-        <div class="col-md-6 col-md-offset-3 wow animated zoomInDown" id="heading-text">
-            <h3>Рэйтинги</h3>
-                <p>Здесь вы можете просмотреть рейтинги по различным категориям</p>
-                <hr class="full">
-                <br/>
-          </div>
-      </div>	<!-- row -->
-      <div class="row main_content">
-        <ul class="price-table-chart">
-                    <li>
+        <div class="row text-center" id="heading">
+            <div class="col-md-6 col-md-offset-3 wow animated zoomInDown" id="heading-text">
+                <h3>Рэйтинги</h3>
+                <p>Здесь вы можете просмотреть рейтинги пользователей 
+                   по различным критериям
+                </p>
+                <hr>
+            </div>
+        </div>
+        <div class="row main_content">
+            <ul class="price-table-chart">
+
+                <li>
                     <a href="rating_ten_lucky">
                         <strong>Топ везунчиков</strong>
                         <span class="price_table-description">1 Website</span> 
@@ -31,7 +31,7 @@
                         <span class="price_table-button">Перейти</span>
                     </a>
                 </li>
-            
+
                 <li>
                     <a href="rating_tests_list">
                         <strong>Топ по тестам</strong>
@@ -53,9 +53,10 @@
                         <span class="price_table-button">Перейти</span>
                     </a>
                 </li>
+
             </ul>
-      </div>	<!-- row main_content -->
-    </div>	<!-- container -->
-  </section>	<!-- price_table -->
+        </div>
+    </div>
+</section>
 
 {% endblock %}

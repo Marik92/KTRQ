@@ -1,15 +1,23 @@
-{% extends "base.html" %} {% load i18n %} {% load staticfiles %} {% load quiz_tags %} {% block title %} {{ quiz.title}} {% endblock %} {% block description %} {% trans "Результаты теста:" %} {{ quiz.title }} {% endblock %} {% block content %}
-<hr>
+{% extends "base.html" %} 
+{% load i18n %} 
+{% load staticfiles %} 
+{% load quiz_tags %}
+
+{% block title %} 
+    {% trans "Профиль" %} 
+{% endblock %}
+
+{% block content %}
 <div class="container">
     <div class="row text-center" id="heading">
         <div class="col-md-6 col-md-offset-3 wow animated zoomInDown" id="heading-text">
             <h3>Профиль</h3>
-            <p>Здесь вы можете просматривать, редактировать свой личный профиль и следить за вашими результатами.</p>
-            <hr class="full">
-            <br/>
+            <p>Здесь вы можете просматривать, редактировать свой личный профиль 
+                и следить за вашими результатами.
+            </p>
+            <hr>
         </div>
     </div>
-    <!-- row -->
     <div class="container">
         <div class="row m-y-2">
             <div class="col-lg-8 push-lg-4">
@@ -22,6 +30,8 @@
                     </li>
                 </ul>
                 <div class="tab-content p-b-3">
+
+                    <!--Profile overview-->
                     <div class="tab-pane active" id="profile">
                         <p>
                             <h2 class="m-y-2"><strong>{{ user.first_name }} {{ user.last_name }} (Логин: {{ user.username }})</strong></h2>
@@ -31,6 +41,7 @@
                         </p>
                         <div class="row">
                             <div class="col-md-6">
+                                
                                 <h5><strong>Город проживания</strong></h5>
                                 <p class="font-italic">
                                     {{ user.userprofile.city }}
@@ -40,36 +51,33 @@
                                 <p class="font-italic">
                                     {{ user.userprofile.filial }}
                                 </p>
+
                                 <h5><strong>Департамент/Служба/Отдел</strong></h5>
                                 <p class="font-italic">
                                     {{ user.userprofile.department }}
                                 </p>
+                                
                                 <h5><strong>Должность</strong></h5>
                                 <p class="font-italic">
                                     {{ user.userprofile.position }}
                                 </p>
-                            </div>
-                            <div class="col-md-6">
 
-                                <h6>Recent Tags</h6>
-                                <a href="" class="tag tag-default tag-pill">html5</a>
-                                <a href="" class="tag tag-default tag-pill">react</a>
-                                <a href="" class="tag tag-default tag-pill">codeply</a>
-                                <a href="" class="tag tag-default tag-pill">angularjs</a>
-                                <a href="" class="tag tag-default tag-pill">css3</a>
-                                <a href="" class="tag tag-default tag-pill">jquery</a>
-                                <a href="" class="tag tag-default tag-pill">bootstrap</a>
-                                <a href="" class="tag tag-default tag-pill">responsive-design</a>
-                                <hr>
+                            </div>
+                            
+                            <!--Profile results-->
+                            <div class="col-md-5">
                                 <p><span class="tag tag-primary"><div class="p-3 mb-2" style="font-size: 18px; text-align: center; background-color: #4169E1; color: white;">Тестов пройдено: {{ exams|length }}</div></span></p>
                                 <p><span class="tag tag-success"><div class="p-3 mb-2" style="font-size: 18px; text-align: center; background-color: #3CB371; color: white;">Сдал: {{ success_exams|length }}</div></span></p>
                                 <p><span class="tag tag-danger"><div class="p-3 mb-2" style="font-size: 18px; text-align: center; background-color:  #FF0000; color: white;">Провалил: {{ failed_exams|length }}</div></span></p>
                             </div>
+                            <!--Profile results-->
+
+                            <!--Profile table-->
                             <div class="col-md-12">
                                 <hr>
-                                <h2 class="m-t-2">Последние пройденные тесты</h2>
+                                <h2 class="m-t-2"><strong>Последние пройденные тесты</strong></h2>
                                 <p>
-                                    <a href='/quiz/progress'>Подробнее</a>
+                                    <a href='/quiz/progress'><strong>Подробнее</strong></a>
                                 </p>
                                 <table>
                                     <thead>
@@ -83,24 +91,28 @@
                                         {% for exam in exams|slice:"::-1"|slice:":5" %}
                                         <tr>
                                             {% language 'ru' %}
-                                            <td>{{ exam.end }}</td>
+                                                <td>{{ exam.end }}</td>
                                             {% endlanguage %}
                                             <td>{{ exam.quiz.title }}</td>
                                             {% if exam.get_percent_correct >= exam.quiz.pass_mark %}
-                                            <td class="td-success">{% trans "Сдан" %}</td>
+                                                <td class="td-success">{% trans "Сдан" %}</td>
                                             {% else %}
-                                            <td class="td-failure">{% trans "Провален" %}</td>
+                                                <td class="td-failure">{% trans "Провален" %}</td>
                                             {% endif %}
                                         </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
+                            <!--Profile table-->
+
                         </div>
-                        <!--/row-->
                     </div>
+                    <!--Profile overview-->
+                    
+                    <!--Profile edit-->
                     <div class="tab-pane" id="edit">
-                        <p></p>
+                        <br/>
                         <form method="post">
                             {% csrf_token %}
                             <div class="form-group row">
@@ -154,21 +166,29 @@
                             <div class="form-group row">
                                 <label class="col-lg-3 col-form-label form-control-label"></label>
                                 <div class="col-lg-9">
-                                    <input type="reset" class="btn btn-outline-secondary" value="Отменить">
-                                    <input type="submit" class="btn btn-outline-primary" value="Сохранить">
+                                    <input type="reset" class="btn btn-danger" value="Отменить">
+                                    <input type="submit" class="btn btn-success" value="Сохранить">
                                     <a href="change_password" class="btn btn-dark">Изменить пароль</a>
                                 </div>
                             </div>
                         </form>
                     </div>
+                    <!--Profile edit-->
+
                 </div>
             </div>
+
+            <!--Profile image-->
             <div class="col-lg-4 pull-lg-8 text-xs-center">
                 <img src="{{ user.userprofile.avatar.url }}" class="rounded-circle" width=200 height="200" alt="avatar">
             </div>
+            <!--Profile image-->
+
         </div>
     </div>
     <hr>
+
+    <!--js script for Departments and Positions dependence select-->
     <script language="javascript">
         $('#id_department').change(function() {
             populatePosition(this)
@@ -208,4 +228,5 @@
             }
         }
     </script>
+    <!--js script for Departments and Positions dependence select-->
 {% endblock %}

@@ -1,4 +1,11 @@
-{% extends "base.html" %} {% load i18n %} {% load quiz_tags %} {% block title %} {% trans "Страница прогресса" %} {% endblock %} {% block description %} {% trans "Личный прогресс пользователя" %} {% endblock %} {% block content %}
+{% extends "base.html" %} 
+{% load i18n %} 
+{% load quiz_tags %} 
+{% block title %} 
+    {% trans "Страница прогресса" %} 
+{% endblock %} 
+
+{% block content %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 <div style="padding: 3%">
@@ -9,7 +16,7 @@
     <table id='cat_table_id'>
         <thead>
             <tr class="table100-head">
-                <th scope="col">{% trans "Категория" %}</th>
+                <th>{% trans "Категория" %}</th>
                 <th>{% trans "Правильные" %}</th>
                 <th>{% trans "Неправильные" %}</th>
                 <th>{% trans "В процентах (%)" %}</th>

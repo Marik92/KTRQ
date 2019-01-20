@@ -3,13 +3,18 @@
 
 {% load quiz_tags %}
 
-{% block title %} {{ quiz.title}} {% endblock %}
-{% block description %} {% trans "Результаты теста:" %} {{ quiz.title }} {% endblock %}
+{% block title %} 
+    {% trans "Топ по тесту" %} {{ quiz_name }}
+{% endblock %}
+
 
 {% block content %}
 
+<!-- js highcharts graphs -->
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/pareto.js"></script>
+<!-- js highcharts graphs -->
+
 <div class="row text-center" id="heading">
     <div class="col-md-6 col-md-offset-3 wow animated zoomInDown" id="heading-text">
         <h3>Топ лучших</h3>
@@ -18,69 +23,77 @@
             по данному тесту.
             Можно просмотреть профиль пользователя нажав на его имя под графиком.
         </p>
-        <hr class="full">
-        <br/>
+        <hr>
     </div>
 </div>
-<div id="container" style="padding-left: 17%">
-    <script>
-        $(function () {
-            var chart = new Highcharts.chart('container', {
-                chart: {
-                    renderTo: 'container',
-                    type: 'column',
-                    width: 1000,
-                    height: 700,
-                    style: {
-                        fontSize: '15px'
-                    },
-                },
-                title: {
-                    text: 'График',
-                    style: {
-                        color: 'black',
-                        fontSize: '25px',
-                        fontWeight: 'bold'
-                    }
-                },
-                tooltip: {
-                    shared: true
-                },
-                legend: {
-                    itemStyle: {
-                        fontWeight: 'bold',
-                        fontSize: '15px'
-                    }
-                },
-                xAxis: {
-                    categories: [{% for k,v in form %} "<a href='/quiz/profile_get/{{ k.id }}'>{{ k.last_name }} {{ k.first_name }}</a>" {% if not forloop.last %}, {% endif %} {% endfor %}],
-                    crosshair: true,
-                    labels: {
+
+{% if form %}
+    <div id="container" style="padding-left: 17%">
+        <script>
+            $(function () {
+                var chart = new Highcharts.chart('container', {
+                    chart: {
+                        renderTo: 'container',
+                        type: 'column',
+                        width: 1000,
+                        height: 700,
                         style: {
-                            color: 'black',
-                            fontSize:'15px'
-                        }
-                    }
-                },          
-                yAxis: [{
+                            fontSize: '15px'
+                        },
+                    },
                     title: {
-                        text: 'Коэффициент'
-                    },
-                    labels: {
+                        text: 'График',
                         style: {
                             color: 'black',
-                            fontSize:'15px'
+                            fontSize: '25px',
+                            fontWeight: 'bold'
                         }
-                    }
-                },],
-                series: [{
-                    name: 'Коэффицент эффективности (по формуле Эдвина Вилсона)',
-                    type: 'column',
-                    color: '#87CEFA',
-                    zIndex: 2,
-                    data: [{% for k,v in form %} {{ v }} {% if not forloop.last %}, {% endif %} {% endfor %}]}]
+                    },
+                    tooltip: {
+                        shared: true
+                    },
+                    legend: {
+                        itemStyle: {
+                            fontWeight: 'bold',
+                            fontSize: '15px'
+                        }
+                    },
+                    xAxis: {
+                        categories: [{% for k,v in form %} "<a href='/quiz/profile_get/{{ k.id }}'>{{ k.last_name }} {{ k.first_name }}</a>" {% if not forloop.last %}, {% endif %} {% endfor %}],
+                        crosshair: true,
+                        labels: {
+                            style: {
+                                color: 'black',
+                                fontSize:'15px'
+                            }
+                        }
+                    },          
+                    yAxis: [{
+                        title: {
+                            text: 'Коэффициент'
+                        },
+                        labels: {
+                            style: {
+                                color: 'black',
+                                fontSize:'15px'
+                            }
+                        }
+                    },],
+                    series: [{
+                        name: 'Коэффицент эффективности (по формуле Эдвина Вилсона)',
+                        type: 'column',
+                        color: '#87CEFA',
+                        zIndex: 2,
+                        data: [{% for k,v in form %} {{ v }} {% if not forloop.last %}, {% endif %} {% endfor %}]}]
+                });
             });
-        });
-    </script>
-</div>
+        </script>
+    </div>
+{% else %}
+    <div style="padding-left: 23%; padding-top: 5%; padding-bottom: 5%">
+        <p style=''>Данный тест еще никто не сдавал 
+            или данные о результатах этого теста не сохраняются в базе
+        </p>
+    </div>
+{% endif %}
 {% endblock %}

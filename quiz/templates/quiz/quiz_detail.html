@@ -2,157 +2,103 @@
 {% load staticfiles %}
 {% load i18n %}
 {% block title %}
-{{ quiz.title }}
+  {% trans "Тест:" %} {{ quiz.title }}
 {% endblock %}
 
 {% block content %}
-    <!-- Page Content -->
-    <div class="container">
+<div style="padding: 3%">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <h1 class="mt-4">Название теста: <strong>{{ quiz.title }}</strong></h1>
 
-        <div class="row">
+        <!-- Quiz category -->
+        <p class="lead">
+          {% trans "Категория" %}:
+          <strong>{{ quiz.category }}</strong>
+        </p>
+        <!-- Quiz category -->
   
-          <!-- Post Content Column -->
-          <div class="col-lg-8">
+        <hr>
+        <!-- Date/Time -->
+        <p>Posted on January 1, 2018 at 12:00 PM</p>
+        <!-- Date/Time -->
+        <hr>
   
-            <!-- Title -->
-            <h1 class="mt-4">Название теста: {{ quiz.title }}</h1>
-  
-            <!-- Author -->
-            <p class="lead">
-              {% trans "Категория" %}:
-              {% ifequal quiz.category.category "Правила Технической Эксплуатации" %}
-                <a href="/quiz/list_pte">{{ quiz.category }}</a>
-              {% endifequal %}
-              {% ifequal quiz.category.category "Техника Безопасности" %}
-                <a href="/quiz/list">{{ quiz.category }}</a>
-              {% endifequal %}
-              {% ifequal quiz.category.category "Остальное" %}
-                <a href="/quiz/list_other">{{ quiz.category }}</a>
-              {% endifequal %}
-              
-            </p>
-  
-            <hr>
-  
-            <!-- Date/Time -->
-            <p>Posted on January 1, 2018 at 12:00 PM</p>
-  
-            <hr>
-  
-            <!-- Preview Image -->
-            {% ifequal quiz.category.category "Остальное" %}
-              <img class="img-fluid rounded" src="/static/quiz/Profit.jpg" alt="">
-            {% endifequal %}
-            <hr>
-  
-            <!-- Post Content -->
-            <h2>Описание теста</h2>
-            <blockquote class="blockquote">
-              <p class="mb-0">{{ quiz.description }}</p>
-            </blockquote>
-            <h2>Правила сдачи теста</h2>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item list-group-item-action list-group-item-success">{% trans "Количество вопросов:" %} {{ quiz.max_questions }}</li>
-                {% if quiz.single_attempt %}
-                  <li class="list-group-item list-group-item-action list-group-item-danger">{% trans "У вас только одна попытка на сдачу этого теста!!!" %}.</li>
-                {% endif %}
-                {% if quiz.attempt_choise == 'D' %}
-                  <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Интервал между сдачей теста: 1 день" %}</li>
-                {% endif %}
-                {% if quiz.attempt_choise == 'M' %}
-                  <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Интервал между сдачей теста: 1 месяц" %}</li>
-                {% endif %}
-                {% if quiz.attempt_choise == 'Y' %}
-                  <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Интервал между сдачей теста: 1 год" %}</li>
-                {% endif %}
-                {% if quiz.attempt_choise == 'U' %}
-                  <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Интервал между сдачей теста: Неограничено" %}</li>
-                {% endif %}
-                {% if quiz.random_order == True %}
-                  <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Порядок выпадения вопросов: Случайно" %}</li>
-                {% else %}
-                  <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Порядок выпадения вопросов: По порядку" %}</li>
-                {% endif %}
-                {% if quiz.answers_at_end == True %}
-                  <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Правильный вариант после ответа: Да" %}</li>
-                {% else %}
-                  <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Правильный вариант после ответа: Нет" %}</li>
-                {% endif %}
-                {% if quiz.exam_paper == True %}
-                  <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Сохранение результата теста: Да" %}</li>
-                {% else %}
-                  <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Сохранение результата теста: Нет" %}</li>
-                {% endif %}
-                <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Порог прохождения теста:" %} {{ quiz.pass_mark }} {% trans "%" %}</li>
-            </ul>
-            <hr>  
-          </div>
-  
-          <!-- Sidebar Widgets Column -->
-          <div class="col-md-4">
-  
-            <!-- Search Widget -->
-            <div class="card my-4">
-              <h5 class="card-header">Начать тест</h5>
-              <div class="card-body" style='align-self: center'>
-                  <a href="{% url 'quiz_question' quiz_name=quiz.url %}" class='btn btn-success' style="width: 80px">
-                      {% trans "Старт" %}
-                  </a>
-                  <a href="/quiz/" class='btn btn-danger'>
-                      {% trans "Отмена" %}
-                  </a>
-              </div>
-            </div>
-  
-            <!-- Categories Widget -->
-            <div class="card my-4">
-              <h5 class="card-header">Test Widget</h5>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-lg-6">
-                    <ul class="list-unstyled mb-0">
-                      <li>
-                        <a href="#">Web Design</a>
-                      </li>
-                      <li>
-                        <a href="#">HTML</a>
-                      </li>
-                      <li>
-                        <a href="#">Freebies</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="col-lg-6">
-                    <ul class="list-unstyled mb-0">
-                      <li>
-                        <a href="#">JavaScript</a>
-                      </li>
-                      <li>
-                        <a href="#">CSS</a>
-                      </li>
-                      <li>
-                        <a href="#">Tutorials</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-  
-            <!-- Side Widget -->
-            <div class="card my-4">
-              <h5 class="card-header">Test Widget</h5>
-              <div class="card-body">
-                You can put anything you want inside of these side widgets. They are easy to use, and feature the new Bootstrap 4 card containers!
-              </div>
-            </div>
-  
-          </div>
-  
-        </div>
-        <!-- /.row -->
-  
+        <!-- Quiz Image -->
+        <img class="img-fluid rounded" src="/static/quiz/Profit.jpg" alt="">
+        <!-- Quiz Image -->
+
       </div>
-      <!-- /.container -->
+  
+      <!-- Sidebar Widgets Column -->
+      <div class="col-md-4">
+  
+        <!-- Categories Widget -->
+        <div class="card my-4">
 
+          <!-- Quiz specifications -->
+          <h2><strong>Правила сдачи теста</strong></h2>
+          <ul class="list-group list-group-flush">
+              <li class="list-group-item list-group-item-action list-group-item-success">{% trans "Количество вопросов:" %} {{ quiz.max_questions }}</li>
+              {% if quiz.single_attempt %}
+                <li class="list-group-item list-group-item-action list-group-item-danger">{% trans "У вас только одна попытка на сдачу этого теста!!!" %}.</li>
+              {% endif %}
+              {% if quiz.attempt_choise == 'D' %}
+                <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Интервал между сдачей теста: 1 день" %}</li>
+              {% endif %}
+              {% if quiz.attempt_choise == 'M' %}
+                <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Интервал между сдачей теста: 1 месяц" %}</li>
+              {% endif %}
+              {% if quiz.attempt_choise == 'Y' %}
+                <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Интервал между сдачей теста: 1 год" %}</li>
+              {% endif %}
+              {% if quiz.attempt_choise == 'U' %}
+                <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Интервал между сдачей теста: Неограничено" %}</li>
+              {% endif %}
+              {% if quiz.random_order == True %}
+                <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Порядок выпадения вопросов: Случайно" %}</li>
+              {% else %}
+                <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Порядок выпадения вопросов: По порядку" %}</li>
+              {% endif %}
+              {% if quiz.answers_at_end == True %}
+                <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Правильный вариант после ответа: Да" %}</li>
+              {% else %}
+                <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Правильный вариант после ответа: Нет" %}</li>
+              {% endif %}
+              {% if quiz.exam_paper == True %}
+                <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Сохранение результата теста: Да" %}</li>
+              {% else %}
+                <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Сохранение результата теста: Нет" %}</li>
+              {% endif %}
+              <li class="list-group-item list-group-item-action list-group-item-primary">{% trans "Порог прохождения теста:" %} {{ quiz.pass_mark }} {% trans "%" %}</li>
+          </ul>
+          <!-- Quiz specifications -->
+  
+          <!-- Quiz description -->
+          <div class="card my-4">
+            <h5 class="card-header"><strong>Описание теста</strong></h5>
+            <div class="card-body">
+              {{ quiz.description }}
+            </div>
+          </div>
+          <!-- Quiz description -->
+
+          <!-- Quiz buttons -->
+          <h5 class="card-header"><strong>Начать тест</strong></h5>
+            <div class="card-body" style='align-self: center'>
+                <a href="{% url 'quiz_question' quiz_name=quiz.url %}" class='btn btn-success' style="width: 80px">
+                    {% trans "Старт" %}
+                </a>
+                <a href="/quiz/" class='btn btn-danger'>
+                    {% trans "Отмена" %}
+                </a>
+            </div>
+          <!-- Quiz buttons -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

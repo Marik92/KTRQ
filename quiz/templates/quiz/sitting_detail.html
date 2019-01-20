@@ -1,4 +1,14 @@
-{% extends 'base.html' %} {% load i18n %} {% load quiz_tags %} {% block title %} {% trans "Результат теста" %} {{ sitting.quiz.title }} {% trans "для пользователя" %} {{ sitting.user }} {% endblock %} {% block content %}
+{% extends 'base.html' %} 
+{% load i18n %} 
+{% load quiz_tags %} 
+{% block title %} 
+    {% trans "Результат теста" %} 
+    {{ sitting.quiz.title }} 
+    {% trans "для пользователя" %} 
+    {{ sitting.user }} 
+{% endblock %} 
+
+{% block content %}
 <div style="padding: 3%">
     <h2>{% trans "Название теста" %}: {{ sitting.quiz.title }}</h2>
     <h3>{% trans "Категория" %}: {{ sitting.quiz.category }}</h3>

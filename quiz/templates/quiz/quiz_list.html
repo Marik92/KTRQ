@@ -1,14 +1,33 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block title %}{% trans "Тесты ТБ" %}{% endblock %}
+{% block title %}
+	{% trans "Список доступных тестов" %}
+{% endblock %}
 
 {% block content %}
-<h2>{% trans "Список тестов" %}</h2>
-<hr>
+<!--css datatables-->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<!--css datatables-->
+
+<!--js datatables-->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<!--js datatables-->
+
+<!--container-->
+<div style="padding: 3%">
+	<div class="row text-center" id="heading">
+		<div class="col-md-6 col-md-offset-3 wow animated zoomInDown" id="heading-text">
+			<h3>Список доступных тестов</h3>
+			<p>
+				Здесь вы можете выбрать необходимый тест.
+			</p>
+			<hr>
+		</div>
+	</div>
     {% if quiz_list %}
-		<table class="table table-hover table-bordered">
-			<thead class='thead-dark'>
-				<tr>
+		<table id='quiz_table_id'>
+			<thead class="table100-head">
+				<tr class="table100-head">
 					<th>{% trans "Название" %}</th>
 					<th>{% trans "Категория" %}</th>
 					<th>{% trans "Сохранение результата" %}</th>
@@ -20,34 +39,7 @@
 			<tbody>
 				{% if not request.user.is_superuser %}
 					{% for quiz in quiz_list %}
-						{% ifequal quiz.category.category "Техника Безопасности" %}
-							{% if quiz.filial == user.userprofile.filial or quiz.filial == Все %}
-								<tr>
-									<td>{{ quiz.title }}</td>
-									<td>{{ quiz.category }}</td>
-									{% if quiz.exam_paper == True %}
-										<td>{% trans "Да" %}</td>
-									{% else %}
-										<td>{% trans "Нет" %}</td>
-									{% endif %}
-									{% if quiz.single_attempt == True %}
-										<td>{% trans "Да" %}</td>
-									{% else %}
-										<td>{% trans "Нет" %}</td>
-									{% endif %}
-									<td>{{ quiz.attempt_choise }}</td>
-									<td>
-										<a href="{% url 'quiz_start_page' slug=quiz.url %}">
-										{% trans "Выбрать" %}
-										</a>
-									</td>
-								</tr>
-							{% endif %}
-						{% endifequal %}
-					{% endfor %}
-				{% else %}
-					{% for quiz in quiz_list %}
-						{% ifequal quiz.category.category "Техника Безопасности" %}
+						{% if quiz.filial == user.userprofile.filial or quiz.filial == Все %}
 							<tr>
 								<td>{{ quiz.title }}</td>
 								<td>{{ quiz.category }}</td>
@@ -68,35 +60,53 @@
 									</a>
 								</td>
 							</tr>
-						{% endifequal %}
+						{% endif %}
+					{% endfor %}
+				{% else %}
+					{% for quiz in quiz_list %}
+						<tr>
+							<td>{{ quiz.title }}</td>
+							<td>{{ quiz.category }}</td>
+							{% if quiz.exam_paper == True %}
+								<td>{% trans "Да" %}</td>
+							{% else %}
+								<td>{% trans "Нет" %}</td>
+							{% endif %}
+							{% if quiz.single_attempt == True %}
+								<td>{% trans "Да" %}</td>
+							{% else %}
+								<td>{% trans "Нет" %}</td>
+							{% endif %}
+							{% if quiz.attempt_choise == 'U' %}
+								<td>{% trans "Неограничено" %}</td>
+							{% endif %}
+							{% if quiz.attempt_choise == 'D' %}
+								<td>{% trans "Раз в сутки" %}</td>
+							{% endif %}
+							{% if quiz.attempt_choise == 'M' %}
+								<td>{% trans "Раз в месяц" %}</td>
+							{% endif %}
+							<td>
+								<a href="{% url 'quiz_start_page' slug=quiz.url %}">
+								{% trans "Выбрать" %}
+								</a>
+							</td>
+						</tr>
 					{% endfor %}
 				{% endif %}
 			</tbody>
 		</table>
-		{% if is_paginated %}
-			<nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-end">
-					{% if page_obj.has_previous %}
-						<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-					{% else %}
-						<li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
-					{% endif %}
-					{% for i in paginator.page_range %}
-						{% if page_obj.number == i %}
-							<li class="page-item active"><a class="page-link" href="#">{{ i }} <span class="sr-only">(current)</span></a></li>
-						{% else %}
-							<li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-						{% endif %}
-					{% endfor %}
-					{% if page_obj.has_next %}
-						<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-					{% else %}
-						<li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
-					{% endif %}
-				</ul>
-			</nav>
-		{% endif %}
 	{% else %}
         <p>{% trans "На данный момент нет доступных тестов" %}.</p>
-    {% endif %}
+	{% endif %}
+</div>
+<!--container-->
+
+<!--js datatables-->
+<script language="javascript">
+	$(document).ready(function() {
+		$('#quiz_table_id').DataTable();
+	});
+</script>
+<!--js datatables-->
 {% endblock %}

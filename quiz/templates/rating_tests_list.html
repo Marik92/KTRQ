@@ -1,9 +1,32 @@
-{% extends "base.html" %} {% load i18n %} {% load quiz_tags %} {% block title %} {{ quiz.title}} {% endblock %} {% block description %} {% trans "Результаты теста:" %} {{ quiz.title }} {% endblock %} {% block content %}
+{% extends "base.html" %} 
+{% load i18n %} 
+{% load quiz_tags %} 
+
+{% block title %} 
+    {% trans "Рейтинг по тестам" %} 
+{% endblock %} 
+
+{% block content %}
+
+<!-- css datatables -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<!-- css datatables -->
+
+<!-- js datatables -->
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<!-- js datatables -->
+
 <div style="padding: 3%">
-    <h2>{% trans "Рейтинг пользователей по отдельным тестам" %}</h2>
-    <hr> {% if quiz_list %}
+    <div class="row text-center" id="heading">
+         <div class="col-md-6 col-md-offset-3 wow animated zoomInDown" id="heading-text">
+            <h3>Рейтинг по отдельным тестам</h3>
+                <p>Здесь вы можете увидеть рейтинг пользователей с наилучшими показателями сдал/провалил
+                        по каждому тесту в отдельности.
+                </p>
+                <hr>
+        </div>
+    </div> 
+    {% if quiz_list %}
     <table id='quiz_table_id'>
 
         <thead>
@@ -21,11 +44,19 @@
             </tr>
             {% endfor %}
         </tbody>
+    
+    </table>
+
+    {% endif %}
+    
 </div>
-{% endif %}
+
+<!-- js datatables -->
 <script language="javascript">
     $(document).ready(function() {
         $('#quiz_table_id').DataTable();
     });
 </script>
+<!-- js datatables -->
+
 {% endblock %}

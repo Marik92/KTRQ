@@ -3,81 +3,89 @@
 
 {% load quiz_tags %}
 
-{% block title %} {{ quiz.title }} {% endblock %}
-{% block description %} {{ quiz.title }} - {{ quiz.description }} {% endblock %}
+{% block title %} 
+	{{ quiz.title }} 
+{% endblock %}
 
 {% block content %}
 
-{% if previous.answers %}
+<div style="padding: 3%">
+	{% if previous.answers %}
 
-  <p class="muted"><small>{% trans "Предыдущий вопрос" %}:</small></p>
-  <p>{{ previous.previous_question }}</p>
+		<p class="muted"><small>{% trans "Предыдущий вопрос" %}:</small></p>
+		<p>{{ previous.previous_question }}</p>
 
-  {% if previous.previous_outcome %}
-	<div class="alert alert-success">
-  {% else %}
-	<div class="alert alert-warning">
-  {% endif %}
-  	  <p><small>
-		{% trans "Ваш ответ был:" %} </small>
-		<strong>
-		  {{ previous.previous_outcome|yesno:"Правильный,Неправильный" }}
-		</strong>
-	  </p>
+		{% if previous.previous_outcome %}
+			<div class="alert alert-success">
+		{% else %}
+			<div class="alert alert-warning">
+		{% endif %}
+		
+			<p>
+				<small>
+					{% trans "Ваш ответ был:" %} 
+				</small>
+				<strong>
+					{{ previous.previous_outcome|yesno:"Правильный,Неправильный" }}
+				</strong>
+			</p>
 
-	</div>
+		</div>
 
-	{% include 'correct_answer.html' %}
+		{% include 'correct_answer.html' %}
 
-	<p><strong>{% trans "Объяснение" %}:</strong></p>
-	<div class="well " style="background-color: #fcf8e3;">
-	  <p>{{ previous.previous_question.explanation }}</p>
-	</div>
+		<p>
+			<strong>
+				{% trans "Объяснение" %}:
+			</strong>
+		</p>
 
-	<hr>
+		<div class="well " style="background-color: #fcf8e3;">
+			<p>{{ previous.previous_question.explanation }}</p>
+		</div>
 
-{% endif %}
+		<hr>
 
-<br />
+	{% endif %}
 
-{% if question %}
+	<br/>
 
-{% if progress %}
-	<div style="float: right;">
-	{% trans "Вопрос" %} {{ progress.0|add:1 }} {% trans "из" %} {{ progress.1 }}
-	</div>
-{% endif %}
+	{% if question %}
 
-<p>
-  <small class="muted">{% trans "Категория вопроса" %}:</small>
-  <strong>{{ question.category }}</strong>
-</p>
-<blockquote class="blockquote">
-	<p class="mb-0">Вопрос: <strong>{{ question.question }}</strong></p>
-</blockquote>
-{% if question.figure %}
-    <img src="{{ question.figure.url }}" alt="{{ question.content }}" />
-{% endif %}
+		{% if progress %}
+			<div style="float: right;">
+			{% trans "Вопрос" %} {{ progress.0|add:1 }} {% trans "из" %} {{ progress.1 }}
+			</div>
+		{% endif %}
 
-<form action="" method="POST">
-	{% csrf_token %}
-  <input type=hidden name="question_id" value="{{ question.id }}">
+		<p>
+			<small class="muted">{% trans "Категория вопроса" %}:</small>
+			<strong>{{ question.category }}</strong>
+		</p>
+		<blockquote class="blockquote">
+			<p class="mb-0">Вопрос: <strong>{{ question.question }}</strong></p>
+		</blockquote>
+		{% if question.figure %}
+				<div style="padding-left: 35%; padding-bottom: 2%;">
+					<img src="{{ question.figure.url }}" alt="{{ question.content }}" style="width: 400px;">
+				</div>
+		{% endif %}
 
-  <ul class="list-group">
+		<form action="" method="POST">
+			{% csrf_token %}
+			<input type=hidden name="question_id" value="{{ question.id }}">
+			<ul class="list-group">
+			{% for answer in form.answers %}
+				<li class="list-group-item">
+						{{ answer }}
+				</li>
+			{% endfor %}
+			</ul>
+			<input type="submit" value={% trans "Дальше" %} class="btn btn-large btn-block btn-warning" >
+		</form>
 
-	{% for answer in form.answers %}
-	  <li class="list-group-item">
-				{{ answer }}
-		</li>
-	{% endfor %}
+	{% endif %}
 
-  </ul>
-  <input type="submit" value={% trans "Дальше" %} class="btn btn-large btn-block btn-warning" >
-</form>
-
-{% endif %}
-
-<hr>
-
+</div>
 
 {% endblock %}

@@ -1,26 +1,29 @@
 {% extends "base.html" %}
 {% load i18n %}
-
 {% load quiz_tags %}
 
-{% block title %} {{ quiz.title}} {% endblock %}
-{% block description %} {% trans "Результаты теста:" %} {{ quiz.title }} {% endblock %}
+{% block title %} 
+    {% trans "Топ везунчиков" %} 
+{% endblock %}
 
 {% block content %}
 
+<!-- js highcharts graphs -->
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/pareto.js"></script>
+<!-- js highcharts graphs -->
+
 <div class="row text-center" id="heading">
     <div class="col-md-6 col-md-offset-3 wow animated zoomInDown" id="heading-text">
         <h3>Топ везунчиков</h3>
         <p>Здесь вы можете увидеть везунчиков с наилучшими показателями сдал/провалил.
             Можно просмотреть профиль везунчика нажав на его имя под графиком.
         </p>
-        <hr class="full">
-        <br/>
+        <hr>
     </div>
 </div>
-<!-- row -->
+
+
 <div id="container" style="padding-left: 17%">
     <script>
         $(function () {
