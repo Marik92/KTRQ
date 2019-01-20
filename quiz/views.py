@@ -24,8 +24,11 @@ def home(request):
 
 def Register(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        print ('METHOD is POST!!!')
+        form = SignUpForm(request.POST or None)
+        print (form)
         if form.is_valid():
+            print ('GG')
             user = form.save()
             user.refresh_from_db()  # load the profile instance created by the signal
             user.save()
@@ -33,7 +36,10 @@ def Register(request):
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
             return redirect('home')
+        else:
+            print ('FORM IS NOT VALID')
     else:
+        print ('METHOD NOT POST!!!')
         form = SignUpForm()
     return render(request, 'register.html', {'form': form})
 
@@ -210,6 +216,13 @@ class QuizRatingDetailView(TemplateView):
         users = User.objects.all()
         user_result = {}
         top_ten = {}
+        quiz_list = Quiz.objects.filter(draft=False)
+        
+        for i in quiz_list:
+            if i.id == int(quiz_id):
+                quiz = i   
+            else:
+                pass
 
         for user in users:
             tests = Sitting.objects.filter(complete=True, quiz__id=quiz_id, user=user)
@@ -232,7 +245,7 @@ class QuizRatingDetailView(TemplateView):
             top_ten[key] = rating
     
         result = dict(sorted(top_ten.items(), key=lambda x: x[1], reverse=True))
-        context = {'form': result.items()}
+        context = {'form': result.items(), 'quiz_name': quiz}
         return context
 
 
@@ -271,6 +284,7 @@ class SittingFilterTitleMixin(object):
 class QuizListView(ListView):
     model = Quiz
     template_name = 'quiz/quiz_list.html'
+    paginate_by = 10
 
     def get_queryset(self):
         queryset = super(QuizListView, self).get_queryset()
@@ -279,6 +293,7 @@ class QuizListView(ListView):
 class QuizListViewPte(ListView):
     model = Quiz
     template_name = 'quiz/quiz_list_pte.html'
+    paginate_by = 10
 
     def get_queryset(self):
         queryset = super(QuizListViewPte, self).get_queryset()
@@ -287,6 +302,7 @@ class QuizListViewPte(ListView):
 class QuizListViewOther(ListView):
     model = Quiz
     template_name = 'quiz/quiz_list_other.html'
+    paginate_by = 10
 
     def get_queryset(self):
         queryset = super(QuizListViewOther, self).get_queryset()
@@ -337,6 +353,7 @@ class ViewQuizListByCategory(ListView):
 
 class QuizUserProgressView(TemplateView):
     template_name = 'progress.html'
+    paginate_by = 10
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -362,6 +379,7 @@ class QuizMarkingList(QuizMarkerMixin, SittingFilterTitleMixin, ListView):
                                                .filter(complete=True)
 
         user_filter = self.request.GET.get('user_filter')
+        
         if user_filter:
             queryset = queryset.filter(Q(user__first_name__icontains=user_filter) | Q(user__last_name__icontains=user_filter))
 

@@ -1,32 +1,31 @@
-{% extends "base.html" %}
-{% load i18n %}
+{% extends "base.html" %} {% load i18n %} {% load quiz_tags %} {% block title %} {{ quiz.title}} {% endblock %} {% block description %} {% trans "Результаты теста:" %} {{ quiz.title }} {% endblock %} {% block content %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<div style="padding: 3%">
+    <h2>{% trans "Рейтинг пользователей по отдельным тестам" %}</h2>
+    <hr> {% if quiz_list %}
+    <table id='quiz_table_id'>
 
-{% load quiz_tags %}
+        <thead>
+            <tr class="table100-head">
+                <th>{% trans "Тест" %}</th>
+                <th>{% trans "Рейтинг" %}</th>
+            </tr>
+        </thead>
 
-{% block title %} {{ quiz.title}} {% endblock %}
-{% block description %} {% trans "Результаты теста:" %} {{ quiz.title }} {% endblock %}
-
-{% block content %}
-<h2>{% trans "Рейтинг пользователей по отдельным тестам" %}</h2>
-<hr>
-    {% if quiz_list %}
-        <table class="table table-hover table-bordered">
-
-            <thead class="thead-dark">
-                <tr>
-                    <th>{% trans "Тест" %}</th>
-                    <th>{% trans "Рейтинг" %}</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for quiz in quiz_list %}
-                <tr>
-                    <td>{{ quiz }}</td>
-                    <td><a href='rating_tests_list/{{ quiz.id }}'>Рейтинг</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-                
-    {% endif %}
+        <tbody>
+            {% for quiz in quiz_list %}
+            <tr>
+                <td>{{ quiz }}</td>
+                <td><a href='rating_tests_list/{{ quiz.id }}'>Рейтинг</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+</div>
+{% endif %}
+<script language="javascript">
+    $(document).ready(function() {
+        $('#quiz_table_id').DataTable();
+    });
+</script>
 {% endblock %}

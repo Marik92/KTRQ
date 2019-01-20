@@ -1,65 +1,58 @@
-{% extends 'base.html' %}
-{% load i18n %}
-{% load quiz_tags %}
-{% block title %}
-{% trans "Результат теста" %} {{ sitting.quiz.title }} {% trans "для пользователя" %} {{ sitting.user }}
-{% endblock %}
+{% extends 'base.html' %} {% load i18n %} {% load quiz_tags %} {% block title %} {% trans "Результат теста" %} {{ sitting.quiz.title }} {% trans "для пользователя" %} {{ sitting.user }} {% endblock %} {% block content %}
+<div style="padding: 3%">
+    <h2>{% trans "Название теста" %}: {{ sitting.quiz.title }}</h2>
+    <h3>{% trans "Категория" %}: {{ sitting.quiz.category }}</h3>
+    <p>{% trans "Описание" %}: {{ sitting.quiz.description }}</p>
+    <hr>
+    <p>{% trans "Пользователь" %}: <strong>{{ sitting.user.get_full_name }}</strong></p>
+    {% language 'ru' %}
+    <p>{% trans "Дата сдачи" %}: <strong>{{ sitting.end|date }}</strong></p>
+    {% endlanguage %}
+    <p>{% trans "Результат" %}: <strong>{{ sitting.get_percent_correct }} %</strong></p>
+    <p>{% trans "Порог прохождения" %}: <strong>{{ sitting.quiz.pass_mark }} %</strong></p>
 
-{% block content %}
-<h2>{% trans "Название теста" %}: {{ sitting.quiz.title }}</h2>
-<h3>{% trans "Категория" %}: {{ sitting.quiz.category }}</h3>
-<p>{% trans "Описание" %}: {{ sitting.quiz.description }}</p>
-<hr>
-<p>{% trans "Пользователь" %}: <strong>{{ sitting.user.get_full_name }}</strong></p>
-{% language 'ru' %}
-	<p>{% trans "Дата сдачи" %}: <strong>{{ sitting.end|date }}</strong></p>
-{% endlanguage %}
-<p>{% trans "Результат" %}: <strong>{{ sitting.get_percent_correct }} %</strong></p>
-<p>{% trans "Порог прохождения" %}: <strong>{{ sitting.quiz.pass_mark }} %</strong></p>
+    <table>
+        <thead>
+            <tr class="table100-head">
+                <th>{% trans "Вопрос" %}</th>
+                <th>{% trans "Ответ пользователя" %}</th>
+                <th>{% trans "Правильность" %}</th>
+                <th></th>
+            </tr>
+        </thead>
 
-<table class="table table-hover table-bordered">
+        <tbody>
+            {% for question in questions %}
 
-  <thead class="thead-dark">
-	<tr>
-	  <th>{% trans "Вопрос" %}</th>
-	  <th>{% trans "Ответ пользователя" %}</th>
-	  <th>{% trans "Правильность" %}</th>
-	  <th></th>
-	</tr>
-  </thead>
+            <tr>
+                <td>
+                    {{ question.question }} {% if question.figure %}
+                    <div style="max-width: 100px;"><img src="{{ question.figure.url }}" alt="{{ question.figure }}" /></div>
+                    {% endif %}
+                </td>
+                <td>{{ question|answer_choice_to_string:question.user_answer }}</td>
+                {% if question.id in sitting.get_incorrect_questions %}
+                <td class="td-failure">
+                    <p>{% trans "Неправильно" %}</p>
+                </td>
+                {% else %}
+                <td class="td-success">
+                    <p>{% trans "Правильно" %}</p>
+                </td>
+                {% endif %}
+                </td>
+                <td>
+                    <form action="" method="POST">{% csrf_token %}
+                        <input type=hidden name="qid" value="{{ question.id }}">
+                        <button type="submit" class="btn btn-warning">{% trans "Поменять результат" %}</button>
+                    </form>
+                </td>
+            </tr>
 
-  <tbody>
-{% for question in questions %}
+            {% endfor %}
 
-	<tr>
-      <td>
-        {{ question.question }}
-        {% if question.figure %}
-        <div style="max-width: 100px;"><img src="{{ question.figure.url }}" alt="{{ question.figure }}"/></div>
-        {% endif %}
-      </td>
-	  <td>{{ question|answer_choice_to_string:question.user_answer }}</td>
-		{% if question.id in sitting.get_incorrect_questions %}
-			<td class="table-danger table-bordered">
-			<p>{% trans "Неправильно" %}</p>
-			</td>
-		{% else %}
-			<td class="table-success table-bordered">
-				<p>{% trans "Правильно" %}</p>
-			</td>
-		{% endif %}
-	  </td>
-	  <td>
-		<form action="" method="POST">{% csrf_token %}
-		  <input type=hidden name="qid" value="{{ question.id }}">
-		  <button type="submit" class="btn btn-warning">{% trans "Поменять результат" %}</button>
-		</form>
-	  </td>
-	</tr>
+        </tbody>
 
-{% endfor %}
-
-  </tbody>
-
-</table>
+    </table>
+</div>
 {% endblock %}

@@ -1,15 +1,80 @@
-{% extends "base.html" %}
-{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Регистрация</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/static/quiz/css/bootstrap.min.css">
+<!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="/static/quiz/css/login-util.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/static/quiz/css/login.css">
+<!--===============================================================================================-->
+</head>
+<body>
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100 p-t-50 p-b-90">
+				<form method='post' class="login100-form validate-form flex-sb flex-w">
+                    {% csrf_token %}
+                    
+                        <span class="login100-form-title p-b-51">
+                            Регистрация
+                        </span>
 
-{% load quiz_tags %}
+                        
+                        <div class="wrap-input100 validate-input m-b-16" data-validate = "Введите логин пользователя">
+                            {{ form.username.errors }}
+                            <input class="input100" id="{{ form.username.id }}" type="text" name="username" placeholder="Логин">
+                            <span class="focus-input100"></span>
+                        </div>
+                    
+                        <div class="wrap-input100 validate-input m-b-16" data-validate = "Введите имя пользователя">
+                            {{ form.first_name.errors }}
+                            <input class="input100" id="{{ form.first_name.id }}" type="text" name="first_name" placeholder="Имя">
+                            <span class="focus-input100"></span>
+                        </div>
 
-{% block title %} {{ quiz.title}} {% endblock %}
-{% block description %} {% trans "Результаты теста:" %} {{ quiz.title }} {% endblock %}
+                        <div class="wrap-input100 validate-input m-b-16" data-validate = "Введите фамилию пользователя">
+                            {{ form.last_name.errors }}
+                            <input class="input100" id="{{ form.last_name.id }}" type="text" name="last_name" placeholder="Фамилия">
+                            <span class="focus-input100"></span>
+                        </div>
 
-{% block content %}
-    <form action="" method="post">{% csrf_token %}
-        {{ form.as_p}}
-        {{profile_form.as_p}}
-        <button type="submit">Зарегестрироваться</button>
-    </form>
-{% endblock %}
+                        <div class="wrap-input100 validate-input m-b-16" data-validate = "Введите e-mail пользователя">
+                            {{ form.email.errors }}
+                            <input class="input100" id="{{ form.email.id }}" type="email" name="email" placeholder="Почта">
+                            <span class="focus-input100"></span>
+                        </div>
+                        
+                        <div class="wrap-input100 validate-input m-b-16" data-validate = "Введите пароль пользователя">
+                            {{ form.password.errors }}
+                            <input class="input100" id="{{ form.password1.id }}" type="password" name="password1" placeholder="Пароль">
+                            <span class="focus-input100"></span>
+                        </div>
+                        
+                        <div class="wrap-input100 validate-input m-b-16" data-validate = "Повторите пароль пользователя">
+                            {{ form.password2.errors }}    
+                            <input class="input100" id="{{ form.password2.id }}" type="password" name="password2" placeholder="Подтверждение Пароля">
+                                <span class="focus-input100"></span>
+                        </div>
+
+                        <div class="container-login100-form-btn m-t-17">
+                            <button type='submit' class="login100-form-btn">
+                                Зарегистрироваться
+                            </button>
+                        </div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+	<div id="dropDownSelect1"></div>
+
+</body>
+</html>
+

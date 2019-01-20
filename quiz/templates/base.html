@@ -1,69 +1,136 @@
-{% load i18n %}
 <!DOCTYPE html>
-<html xmlns:fb="http://www.facebook.com/2008/fbml" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<html>
+
 <head>
-<meta charset="utf-8">
+    <title>KTRQ</title>
 
-<title>{% trans "Портал тестирования" %} | {% block title %}{% endblock %}</title>
-<meta name="description" content="{% block description %}{% endblock %}">
+    <!-- meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- styles -->
-
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/static/quiz/css/home.css">
-<!-- Custom styles for this template -->
-<link href="pricing.css" rel="stylesheet">
-<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-<!--[if lt IE 9]>
-<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-
+    <!-- css -->
+    <link rel="stylesheet" href="/static/quiz/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/quiz/css/ionicons.min.css">
+    <link rel="stylesheet" href="/static/quiz/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/quiz/css/owl.carousel.css">
+    <link rel="stylesheet" href="/static/quiz/css/owl.theme.css">
+    <link rel="stylesheet" href="/static/quiz/css/owl.transitions.css">
+    <link rel="stylesheet" href="/static/quiz/css/animate.css">
+    <link rel="stylesheet" href="/static/quiz/css/custom.css">
+    <link rel="stylesheet" href="/static/quiz/css/table.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- js -->
+    <script src="/static/quiz/js/bootstrap.min.js"></script>
+    <script src="/static/quiz/js/owl.carousel.min.js"></script>
+    <script src="/static/quiz/js/isotope.pkgd.min.js"></script>
+    <script src="/static/quiz/js/script.js"></script>
+    <script src="/static/quiz/js/wow.min.js"></script>
 </head>
 
 <body>
-    <div class="d-flex flex-column flex-md-row align-items-center p-2 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-        <img class=" my-0 mr-md-auto card-img-top" src="/media/another_images/logo.png" alt="" style="height: 50px; width: 300px">
-        <nav class="my-2 my-md-0 mr-md-3">
-        </nav>
-        {% if user.is_authenticated %}
-          <p>Пользователь: {{ user.username }}</p>
-        {% else %}
-          <p>Вы не авторизовались</p>
-        {% endif %}
-      </div>
-      <div class="d-flex flex-column flex-md-row align-items-center p-2 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-        <h5 class="my-0 mr-md-auto font-weight-normal"></h5>
-        <nav class="my-2 my-md-0 mr-md-3">
-          <a class="p-2 text-dark" href="/quiz/">Домашняя</a>
-          <a class="p-2 text-dark" href="/quiz/profile/">Профиль</a>
-          <a class="p-2 text-dark" href="/quiz/rating_list/">Рейтинги</a>
-          <a class="p-2 text-dark" href="#">Предложения</a>
-          {% if request.user.is_superuser %}
-              <a class="p-2 text-dark" href="/quiz/marking/">Результаты Тестов</a>
-          {% endif %}
-        </nav>
-        {% if user.is_authenticated %}
-          <a class="btn btn-outline-primary" href="/accounts/logout">Выйти</a>
-        {% else %}
-          <a class="btn btn-outline-primary" href="/accounts/login">Войти</a>
-        {% endif %}
-      </div>
+    <div id="wrapper">
+        <div id="overlay-1" class="div_overlay">
+            <section id="navigation">
+                <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					        		<span class="ion-navicon"></span>
+					      		</button>
+                            <a class="navbar-brand" href="#">KTRQ</a>
+                        </div>
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="/quiz/">Домашняя</a></li>
+                                <li><a href="/quiz/profile/">Профиль</a></li>
+                                <li><a href="/quiz/rating_list/">Рейтинги</a></li>
+                                <li><a href="#price_table">Предложения</a></li>
+                                {% if request.user.is_superuser %}
+                                <li><a href="/quiz/marking/">Результаты</a></li>
+                                {% endif %}
+                                <li><a href='/accounts/logout' class="btn btn-logout is-checked">Выйти</a></li>
+                            </ul>
+                        </div>
+                        <!-- collapse navbar-collapse -->
+                    </div>
+                    <!-- container-fluid -->
+                </nav>
+                <!-- navbar -->
+            </section>
+            <!-- #navigation -->
+            <div id="bottom" class="bottom text-center">
+                <a href="#about"><i class="ion-ios7-arrow-down"></i></a>
+            </div>
+        </div>
+        <!-- overlay-1 -->
+    </div>
+    <!-- wrapper -->
 
-<!-- Before the quiz content -->
+    <!-- js -->
+    <script>
+        $(document).ready(function() {
+            $("#client-speech").owlCarousel({
+                autoPlay: 3000,
+                navigation: false, // Show next and prev buttons
+                slideSpeed: 700,
+                paginationSpeed: 1000,
+                singleItem: true
+            });
+        });
+    </script>
+    <script>
+        new WOW().init();
+    </script>
+    <script>
+        $(function() {
+            // init Isotope
+            var $container = $('.isotope').isotope({
+                itemSelector: '.element-item',
+                layoutMode: 'fitRows'
+            });
 
-<div class="container">
 
-{% block content %}
+            // bind filter button click
+            $('#filters').on('click', 'button', function() {
+                var filterValue = $(this).attr('data-filter');
+                // use filterFn if matches value
+                $container.isotope({
+                    filter: filterValue
+                });
+            });
 
-{% endblock %}
+            // change is-checked class on buttons
+            $('.button-group').each(function(i, buttonGroup) {
+                var $buttonGroup = $(buttonGroup);
+                $buttonGroup.on('click', 'button', function() {
+                    $buttonGroup.find('.is-checked').removeClass('is-checked');
+                    $(this).addClass('is-checked');
+                });
+            });
 
-</div>
+        });
+    </script>
+    <script src="/static/quiz/js/jquery.knob.js"></script>
+    <script src="/static/quiz/js/daterangepicker.js"></script>
+    <script src="/static/quiz/js/bootstrap3-wysihtml5.all.min.js"></script>
 
-<!-- After the quiz content -->
+    <div class="container" style="width: 100%; padding: 0%">
 
+        {% block content %} 
+        
+        {% endblock %}
 
+    </div>
+
+    <!-- footer -->
+    <section id= "footer" class= "main-footer">
+        <div class= "row">
+            <div class= "copyright text-center">
+                <p> © 2019 KTRQ. Designed and Developed by <a href="http://themewagon.com"><span class= "theme">Okassov Marat</span></a></p>
+            </div>
+        </div>
+    </section>
+    <!-- footer -->
 </body>
+
 </html>

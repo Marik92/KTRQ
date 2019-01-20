@@ -129,3 +129,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'quiz/media')
 LOGIN_REDIRECT_URL = '/quiz'
 LOGOUT_REDIRECT_URL = '/accounts/login'
 AUTH_PROFILE_MODULE = "quiz.UserProfile"
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ktrq.dnst@gmail.com'
+EMAIL_HOST_PASSWORD = 'ZZzz1234KTRQ'
+DEFAULT_FROM_EMAIL = 'ktrq.dnst@gmail.com'
+EMAIL_USE_TLS = True
+

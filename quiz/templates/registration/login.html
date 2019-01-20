@@ -1,17 +1,75 @@
-{% extends "base.html" %}
-{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Вход</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/static/quiz/css/bootstrap.min.css">
+<!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="/static/quiz/css/login-util.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/static/quiz/css/login.css">
+<!--===============================================================================================-->
+</head>
+<body>
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100 p-t-50 p-b-90">
+				<form method='post' class="login100-form validate-form flex-sb flex-w">
+          {% csrf_token %}
+					<span class="login100-form-title p-b-51">
+						Вход
+					</span>
 
-{% load quiz_tags %}
+					
+					<div class="wrap-input100 validate-input m-b-16" data-validate = "Введите логин пользователя">
+            <input class="input100" id="{{ form.username.id }}" type="text" name="username" placeholder="Логин">
+						<span class="focus-input100"></span>
+					</div>
+					
+					
+					<div class="wrap-input100 validate-input m-b-16" data-validate = "Введите пароль пользователя">
+            <input class="input100" id="{{ form.password.id }}" type="password" name="password" placeholder="Пароль">
+						<span class="focus-input100"></span>
+					</div>
+					
+					<div class="flex-sb-m w-full p-t-3 p-b-24">
+						<div class="contact100-form-checkbox">
+							<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+							<label class="label-checkbox100" for="ckb1">
+								Запомнить
+							</label>
+						</div>
+            
+            <div>
+              <a href="/register" class='txt1'>
+                Зарегистрироваться
+              </a>
+            </div>
 
-{% block title %} {{ quiz.title}} {% endblock %}
-{% block description %} {% trans "Результаты теста:" %} {{ quiz.title }} {% endblock %}
+						<div>
+							<a href="/password_reset" class="txt1">
+								Забыли пароль?
+							</a>
+            </div>
+            
+					</div>
 
-{% block content %}
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Войти</button>
-  <a href="/register">Зарегистрироваться</a>
-</form>
-{% endblock %}
+					<div class="container-login100-form-btn m-t-17">
+						<button class="login100-form-btn">
+							Войти
+						</button>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+	<div id="dropDownSelect1"></div>
+
+</body>
+</html>

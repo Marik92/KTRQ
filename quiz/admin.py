@@ -5,6 +5,7 @@ from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
 
+
 class QuizAdminForm(forms.ModelForm):
     """
     below is from
@@ -38,6 +39,7 @@ class QuizAdminForm(forms.ModelForm):
         self.save_m2m()
         return quiz
 
+    
 
 class QuizAdmin(admin.ModelAdmin):
     form = QuizAdminForm
@@ -47,6 +49,7 @@ class QuizAdmin(admin.ModelAdmin):
 
 class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('category', )
+
 
 
 class SubCategoryAdmin(admin.ModelAdmin):

@@ -1,64 +1,61 @@
-{% extends 'base.html' %}
-{% load i18n %}
-{% block title %}{% trans "Все тесты" %}{% endblock %}
-
-{% block content %}
-<h1>{% trans "Результаты тестов" %}</h1>
+{% extends 'base.html' %} {% load i18n %} {% block title %}{% trans "Все тесты" %}{% endblock %} {% block content %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 <hr>
-    {% if sitting_list %}
+<div class="container" style="width: 100%; padding: 3%">
+    <div class="row text-center" id="heading">
+        <div class="col-md-6 col-md-offset-3 wow animated zoomInDown" id="heading-text">
+            <h3>Результаты</h3>
+            <p>Здесь вы можете просмотреть результаты всех пользователей</p>
+            <hr class="full">
+            <br/>
+        </div>
+    </div>
+    <!-- row -->
 
-		<table class="table table-hover table-bordered">
-
-		  <thead class="thead-dark">
-			<tr>
-			  <th>{% trans "Пользователь" %}</th>
-			  <th>{% trans "Тест" %}</th>
-			  <th>{% trans "Дата сдачи" %}</th>
-				<th>{% trans "В процентах (%)" %}</th>
-				<th>{% trans "Результат" %}</th>
-			  <th></th>
-			</tr>
-		  </thead>
-
-		  <tbody>
-			<tr>
-			  <form action="" method="GET">
-				<td><input type="text" name="user_filter" /></td>
-				<td><input type="text" name="quiz_filter" /></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td><button type="submit" class="btn btn-primary">{% trans "Поиск" %}</button></td>
-			  </form>
-			</tr>
-
-
-        {% for sitting in sitting_list %}
-
-			<tr>
-			  <td>{{ sitting.user.last_name }} {{ sitting.user.first_name }}</td>
-				<td>{{ sitting.quiz }}</td>
-				{% language 'ru' %}
-					<td>{{ sitting.end|date }}</td>
-				{% endlanguage %}
-				<td>{{ sitting.get_percent_correct }} %</td>
-				{% if sitting.get_percent_correct >= sitting.quiz.pass_mark %}
-					<td class="table-success">{% trans "Сдал" %}</td>
-				{% else %}
-					<td class="table-danger">{% trans "Провалил" %}</td>
-				{% endif %}
-			  <td>
-				<a href="{% url 'quiz_marking_detail' pk=sitting.id %}">
-				  {% trans "Детали" %}
-				</a>
-			</tr>
-
-        {% endfor %}
-
-		  </tbody>
-
-		</table>
+    <div style="width: 100%">
+        {% if sitting_list %}
+        <table id='sitting_table_id'>
+            <thead>
+                <tr class="table100-head">
+                    <th>{% trans "Пользователь" %}</th>
+                    <th>{% trans "Филиал" %}</th>
+                    <th>{% trans "Тест" %}</th>
+                    <th>{% trans "Дата сдачи" %}</th>
+                    <th style="text-align: center">{% trans "В процентах (%)" %}</th>
+                    <th>{% trans "Результат" %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sitting in sitting_list %}
+                <tr>
+                    <td>{{ sitting.user.last_name }} {{ sitting.user.first_name }}</td>
+                    <td>{{ sitting.user.userprofile.department }}</td>
+                    <td>{{ sitting.quiz }}</td>
+                    {% language 'ru' %}
+                    <td>{{ sitting.end }}</td>
+                    {% endlanguage %}
+                    <td style="text-align: center">{{ sitting.get_percent_correct }} %</td>
+                    {% if sitting.get_percent_correct >= sitting.quiz.pass_mark %}
+                    <td class="td-success">{% trans "Сдал" %}</td>
+                    {% else %}
+                    <td class="td-failure">{% trans "Провалил" %}</td>
+                    {% endif %}
+                    <td>
+                        <a href="{% url 'quiz_marking_detail' pk=sitting.id %}">
+						{% trans "Детали" %}
+					</a>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script language="javascript">
+        $(document).ready(function() {
+            $('#sitting_table_id').DataTable();
+        });
+    </script>
     {% else %}
-        <p>{% trans "Нет подходящих тестов" %}.</p>
-    {% endif %}
-{% endblock %}
+    <p>{% trans "Нет подходящих тестов" %}.</p>
+    {% endif %} {% endblock %}

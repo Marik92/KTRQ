@@ -10,8 +10,18 @@
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/pareto.js"></script>
-
-<div id="container" class='w-100 h-100' style="height: 100px;">
+<div class="row text-center" id="heading">
+    <div class="col-md-6 col-md-offset-3 wow animated zoomInDown" id="heading-text">
+        <h3>Топ неудачников</h3>
+        <p>Здесь вы можете увидеть неудачников с наихудшими показателями сдал/провалил.
+            Можно просмотреть профиль неудачника нажав на его имя под графиком.
+        </p>
+        <hr class="full">
+        <br/>
+    </div>
+</div>
+<!-- row -->
+<div id="container" style="padding-left: 17%">
     <script>
         $(function () {
             var chart = new Highcharts.chart('container', {
@@ -25,7 +35,7 @@
                     }
                 },
                 title: {
-                    text: 'Топ 10 лузеров',
+                    text: 'График',
                     style: {
                         color: 'black',
                         fontSize: '25px',

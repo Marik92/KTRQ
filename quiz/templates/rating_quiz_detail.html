@@ -10,7 +10,19 @@
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/pareto.js"></script>
-<div id="container">
+<div class="row text-center" id="heading">
+    <div class="col-md-6 col-md-offset-3 wow animated zoomInDown" id="heading-text">
+        <h3>Топ лучших</h3>
+        <h4>Тест: <strong>{{ quiz_name }}</strong></h4>
+        <p>Здесь вы можете увидеть пользователей с наилучшими показателями сдал/провалил 
+            по данному тесту.
+            Можно просмотреть профиль пользователя нажав на его имя под графиком.
+        </p>
+        <hr class="full">
+        <br/>
+    </div>
+</div>
+<div id="container" style="padding-left: 17%">
     <script>
         $(function () {
             var chart = new Highcharts.chart('container', {
@@ -24,7 +36,7 @@
                     },
                 },
                 title: {
-                    text: 'Топ 10 везунчиков',
+                    text: 'График',
                     style: {
                         color: 'black',
                         fontSize: '25px',
@@ -41,7 +53,7 @@
                     }
                 },
                 xAxis: {
-                    categories: [{% for k,v in form %} "{{ k.last_name }} {{ k.first_name }}" {% if not forloop.last %}, {% endif %} {% endfor %}],
+                    categories: [{% for k,v in form %} "<a href='/quiz/profile_get/{{ k.id }}'>{{ k.last_name }} {{ k.first_name }}</a>" {% if not forloop.last %}, {% endif %} {% endfor %}],
                     crosshair: true,
                     labels: {
                         style: {
@@ -64,7 +76,7 @@
                 series: [{
                     name: 'Коэффицент эффективности (по формуле Эдвина Вилсона)',
                     type: 'column',
-                    color: 'Gold ',
+                    color: '#87CEFA',
                     zIndex: 2,
                     data: [{% for k,v in form %} {{ v }} {% if not forloop.last %}, {% endif %} {% endfor %}]}]
             });

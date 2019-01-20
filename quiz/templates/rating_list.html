@@ -7,73 +7,55 @@
 {% block description %} {% trans "Результаты теста:" %} {{ quiz.title }} {% endblock %}
 
 {% block content %}
-
-    <!-- Page Content -->
+<!-- Price-Table -->
+<hr>
+<section id="price_table">
     <div class="container">
-
-        <h1>Рейтинги</h1>
-
-        <hr>  
-  
-        <!-- Page Features -->
-        <div class="row text-center">
-  
-          <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card">
-              <img class="card-img-top" src="/media/another_images/category.png" alt="">
-              <div class="card-body" style="height: 210px">
-                <h4 class="card-title">Топ 10 по категориям</h4>
-                <p class="card-text">Рейтинг лучших 10 пользователей по каждой категории</p>
-              </div>
-              <div class="card-footer">
-                <a href="rating_category_list" class="btn btn-primary">Посмотреть</a>
-              </div>
-            </div>
+      <div class="row text-center" id="heading">
+        <div class="col-md-6 col-md-offset-3 wow animated zoomInDown" id="heading-text">
+            <h3>Рэйтинги</h3>
+                <p>Здесь вы можете просмотреть рейтинги по различным категориям</p>
+                <hr class="full">
+                <br/>
           </div>
-  
-          <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card">
-              <img class="card-img-top" src="/media/another_images/quiz.png" alt="">
-              <div class="card-body" style="height: 210px">
-                <h4 class="card-title">Топ 10 по всем видам тестам</h4>
-                <p class="card-text">Рейтинг лучших 10 пользователей по каждому тесту</p>
-              </div>
-              <div class="card-footer">
-                <a href="rating_tests_list" class="btn btn-primary">Посмотреть</a>
-              </div>
-            </div>
-          </div>
-  
-          <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card">
-              <img class="card-img-top" src="/media/another_images/like.jpg" alt="">
-              <div class="card-body" style="height: 210px">
-                <h4 class="card-title">Топ 10 везунчиков</h4>
-                <p class="card-text">Рейтинг лучших 10 пользователей по соотношению сдал/провалил</p>
-              </div>
-              <div class="card-footer">
-                <a href="rating_ten_lucky" class="btn btn-primary">Посмотреть</a>
-              </div>
-            </div>
-          </div>
-  
-          <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card">
-              <img class="card-img-top" src="/media/another_images/dislike.png" alt="">
-              <div class="card-body" style="height: 210px">
-                <h4 class="card-title">Топ 10 неудачников</h4>
-                <p class="card-text">Рейтинг худших 10 пользователей по соотношению сдал/провалил</p>
-              </div>
-              <div class="card-footer">
-                <a href="rating_ten_looser" class="btn btn-primary">Посмотреть</a>
-              </div>
-            </div>
-          </div>
-  
-        </div>
-        <!-- /.row -->
-  
-      </div>
-      <!-- /.container -->
+      </div>	<!-- row -->
+      <div class="row main_content">
+        <ul class="price-table-chart">
+                    <li>
+                    <a href="rating_ten_lucky">
+                        <strong>Топ везунчиков</strong>
+                        <span class="price_table-description">1 Website</span> 
+                        <span class="price_table-description">1 Year Updates</span> 
+                        <span class="price_table-description">No Email Support</span>
+                        <span class="price_table-description"><img class="card-img-top" src="/media/another_images/thumb-up.svg" alt="" style="width: 100px"></span>                       
+                        <span class="price_table-button">Перейти</span>
+                    </a>
+                </li>
+            
+                <li>
+                    <a href="rating_tests_list">
+                        <strong>Топ по тестам</strong>
+                        <span class="price_table-description">Unlimited Websites</span> 
+                        <span class="price_table-description">1 Year Updates</span> 
+                        <span class="price_table-description">1 Year Email Support</span>
+                        <span class="price_table-description"><img class="card-img-top" src="/media/another_images/bookmark.svg" alt="" style="width: 100px"></span>
+                        <span class="price_table-button">Перейти</span>
+                    </a>
+                </li>
+            
+                <li>
+                    <a href="rating_ten_looser">
+                        <strong>Топ неудачников</strong>
+                        <span class="price_table-description">Unlimited Websites</span> 
+                        <span class="price_table-description">Lifetime Updates</span> 
+                        <span class="price_table-description">Lifetime Email Support</span>
+                        <span class="price_table-description"><img class="card-img-top" src="/media/another_images/thumb-down.svg" alt="" style="width: 100px"></span>
+                        <span class="price_table-button">Перейти</span>
+                    </a>
+                </li>
+            </ul>
+      </div>	<!-- row main_content -->
+    </div>	<!-- container -->
+  </section>	<!-- price_table -->
 
 {% endblock %}

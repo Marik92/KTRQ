@@ -10,7 +10,18 @@
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/pareto.js"></script>
-<div id="container">
+<div class="row text-center" id="heading">
+    <div class="col-md-6 col-md-offset-3 wow animated zoomInDown" id="heading-text">
+        <h3>Топ везунчиков</h3>
+        <p>Здесь вы можете увидеть везунчиков с наилучшими показателями сдал/провалил.
+            Можно просмотреть профиль везунчика нажав на его имя под графиком.
+        </p>
+        <hr class="full">
+        <br/>
+    </div>
+</div>
+<!-- row -->
+<div id="container" style="padding-left: 17%">
     <script>
         $(function () {
             var chart = new Highcharts.chart('container', {
@@ -24,7 +35,7 @@
                     }
                 },
                 title: {
-                    text: 'Топ 10 везунчиков',
+                    text: 'График',
                     style: {
                         color: 'black',
                         fontSize: '25px',
@@ -64,7 +75,7 @@
                 series: [{
                     name: 'Коэффицент эффективности (по формуле Эдвина Вилсона)',
                     type: 'column',
-                    color: 'PaleGreen',
+                    color: '#3CB371',
                     zIndex: 2,
                     data: [{% for k,v in form %} {{ v }} {% if not forloop.last %}, {% endif %} {% endfor %}]}]
             });
